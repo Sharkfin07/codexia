@@ -69,7 +69,7 @@ class BookRepository {
       }
 
       // Detail endpoint returns the book object at root.
-      return BookModel.fromMap(data as Map<String, dynamic>);
+      return BookModel.fromMap(data);
     } on DioException catch (e) {
       throw BookRepositoryException(_dioMessage(e));
     }
@@ -84,12 +84,13 @@ class BookRepository {
     // Prefer a short, helpful message to surface in UI.
     final buffer = StringBuffer('Network error');
     if (status != null) buffer.write(' ($status)');
-    if (body != null)
+    if (body != null) {
       buffer.write(': $body');
-    else if (message != null)
+    } else if (message != null) {
       buffer.write(': $message');
-    else if (underlying != null)
+    } else if (underlying != null) {
       buffer.write(': $underlying');
+    }
     return buffer.toString();
   }
 }
