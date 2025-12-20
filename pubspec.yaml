@@ -1,6 +1,6 @@
 name: litera
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   firebase_core: ^4.3.0
+  dio: ^5.9.0
 
 dev_dependencies:
   flutter_test:
