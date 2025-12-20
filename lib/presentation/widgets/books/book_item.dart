@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/models/book_model.dart';
@@ -61,6 +62,7 @@ class _Cover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) print(url);
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Image.network(
@@ -68,6 +70,7 @@ class _Cover extends StatelessWidget {
         width: 64,
         height: 96,
         fit: BoxFit.cover,
+        // ignore: unnecessary_underscores
         errorBuilder: (_, __, ___) => Container(
           width: 64,
           height: 96,
