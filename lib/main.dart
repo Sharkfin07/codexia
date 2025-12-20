@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:litera/presentation/screens/home/jelajah.dart';
+import 'package:litera/presentation/screens/home/jelajah_screen.dart';
 
 void main() {
   runApp(const MainApp());

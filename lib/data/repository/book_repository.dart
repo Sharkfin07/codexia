@@ -6,13 +6,24 @@ import '../models/book_model.dart';
 
 class BookRepository {
   BookRepository({Dio? dio})
-    : _dio = dio ?? Dio(BaseOptions(baseUrl: _baseUrl));
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
+              baseUrl: _baseUrl,
+              connectTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 15),
+            ),
+          );
 
-  static const String _baseUrl = 'https://bukuacak.vercel.app/api';
+  /// Per dokumentasi Buku Acak: https://bukuacak.vercel.app/api
+  /// Host: https://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1
+  static const String _baseUrl =
+      'https://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1';
   final Dio _dio;
 
   Future<List<BookModel>> fetchBooks({
-    String? search,
+    String? keyword,
     String? genre,
     int? year,
     BookSort sort = BookSort.newest,
@@ -21,14 +32,14 @@ class BookRepository {
   }) async {
     try {
       final response = await _dio.get<Map<String, dynamic>>(
-        '/books',
+        '/book',
         queryParameters: {
-          if (search != null && search.isNotEmpty) 'search': search,
+          if (keyword != null && keyword.isNotEmpty) 'keyword': keyword,
           if (genre != null && genre.isNotEmpty) 'genre': genre,
           if (year != null) 'year': '$year',
           'sort': sort.key,
           'page': '$page',
-          'limit': '$pageSize',
+          // API default itemsPerPage=20; limit param not documented, so omitted.
         },
       );
 
@@ -39,7 +50,8 @@ class BookRepository {
         );
       }
 
-      final rawList = data['data'] as List<dynamic>? ?? [];
+      // API returns { books: [...], pagination: {...} }
+      final rawList = data['books'] as List<dynamic>? ?? [];
       return rawList
           .map((e) => BookModel.fromMap(e as Map<String, dynamic>))
           .toList();
@@ -50,13 +62,14 @@ class BookRepository {
 
   Future<BookModel> fetchBookDetail(String id) async {
     try {
-      final response = await _dio.get<Map<String, dynamic>>('/books/$id');
+      final response = await _dio.get<Map<String, dynamic>>('/book/$id');
       final data = response.data;
       if (response.statusCode != 200 || data == null) {
         throw BookRepositoryException('Failed to load book ($id)');
       }
 
-      return BookModel.fromMap(data['data'] as Map<String, dynamic>);
+      // Detail endpoint returns the book object at root.
+      return BookModel.fromMap(data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw BookRepositoryException(_dioMessage(e));
     }
@@ -65,7 +78,19 @@ class BookRepository {
   String _dioMessage(DioException e) {
     final status = e.response?.statusCode;
     final body = e.response?.data;
-    return 'Network error${status != null ? ' ($status)' : ''}: ${body ?? e.message}';
+    final message = e.message;
+    final underlying = e.error?.toString();
+
+    // Prefer a short, helpful message to surface in UI.
+    final buffer = StringBuffer('Network error');
+    if (status != null) buffer.write(' ($status)');
+    if (body != null)
+      buffer.write(': $body');
+    else if (message != null)
+      buffer.write(': $message');
+    else if (underlying != null)
+      buffer.write(': $underlying');
+    return buffer.toString();
   }
 }
 
