@@ -16,6 +16,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: scheme,
+      fontFamily: 'Poppins',
     );
   }
 
@@ -33,6 +34,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: scheme,
+      fontFamily: 'Poppins',
     );
   }
 }
