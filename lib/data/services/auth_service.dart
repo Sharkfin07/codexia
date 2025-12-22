@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import './firestore_service.dart';
 
-class AuthServices {
+class AuthService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   User? get currentUser => firebaseAuth.currentUser;
@@ -20,11 +21,26 @@ class AuthServices {
   Future<UserCredential> signUp({
     required String email,
     required String password,
+    required String name,
   }) async {
-    return await firebaseAuth.createUserWithEmailAndPassword(
+    final cred = await firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+
+    if (cred.user != null) {
+      await cred.user!.updateDisplayName(name);
+
+      // Store initial profile in users collection
+      await FirestoreService.instance.set(
+        'users/${cred.user!.uid}',
+        {'uid': cred.user!.uid, 'name': name, 'email': email},
+        merge: true,
+        setCreatedAt: true,
+      );
+    }
+
+    return cred;
   }
 
   Future<void> signOut() async {
@@ -35,8 +51,16 @@ class AuthServices {
     await firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
-  Future<void> updateUsername({required String username}) async {
-    currentUser!.updateDisplayName(username);
+  Future<void> updateUsername({required String name}) async {
+    final user = currentUser;
+    if (user == null) throw Exception('No authenticated user');
+
+    await user.updateDisplayName(name);
+
+    // Update also in users collection (merge to avoid overwriting other fields)
+    await FirestoreService.instance.set('users/${user.uid}', {
+      'name': name,
+    }, merge: true);
   }
 
   Future<void> deleteAccount({
@@ -47,9 +71,12 @@ class AuthServices {
       email: email,
       password: password,
     );
-    await currentUser!.reauthenticateWithCredential(credential);
-    await currentUser!.delete();
-    signOut();
+    final user = currentUser;
+    if (user == null) throw Exception('No authenticated user');
+
+    await user.reauthenticateWithCredential(credential);
+    await user.delete();
+    await signOut();
   }
 
   Future<void> resetPasswordFromCurrentPassword({
@@ -61,7 +88,10 @@ class AuthServices {
       email: email,
       password: currentPassword,
     );
-    await currentUser!.reauthenticateWithCredential(credential);
-    await currentUser!.updatePassword(newPassword);
+    final user = currentUser;
+    if (user == null) throw Exception('No authenticated user');
+
+    await user.reauthenticateWithCredential(credential);
+    await user.updatePassword(newPassword);
   }
 }

@@ -59,5 +59,4 @@ class RentalModel {
   }
 }
 
-// TODO: Implement logic for rental status switching
 enum RentalStatus { active, returned, overdue }
