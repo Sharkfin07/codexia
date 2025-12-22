@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:codexia/presentation/screens/home/explore_screen.dart';
+import 'package:codexia/presentation/screens/explore/explore_screen.dart';
 
 void main() {
   runApp(const MainApp());
