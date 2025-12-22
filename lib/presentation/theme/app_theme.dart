@@ -1,20 +1,38 @@
 import 'package:flutter/material.dart';
 import './app_palette.dart';
 
-/*
- * Palettes: 
- * Light Primary: #FFFDFE
- * Light Secondary: #FFE9F2
- * Dark Primary: #10082D
- * Dark Secondary: #180161
- * Light Pink: #FFCCE4
- * Dark Pink: #EB3678
- */
-
 class AppTheme {
-  static ThemeData lightTheme() =>
-      ThemeData(useMaterial3: true, brightness: Brightness.light);
+  static ThemeData lightTheme() {
+    final scheme = ColorScheme.light(
+      primary: AppPalette.lightPrimary,
+      secondary: AppPalette.lightSecondary,
+      surface: Colors.white,
+      onPrimary: Colors.black,
+      onSecondary: Colors.black,
+      onSurface: Colors.black,
+    );
 
-  static ThemeData darkTheme() =>
-      ThemeData(useMaterial3: true, brightness: Brightness.dark);
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
+      colorScheme: scheme,
+    );
+  }
+
+  static ThemeData darkTheme() {
+    final scheme = ColorScheme.dark(
+      primary: AppPalette.darkPrimary,
+      secondary: AppPalette.darkSecondary,
+      surface: const Color(0xFF120A2A),
+      onPrimary: Colors.white,
+      onSecondary: Colors.white,
+      onSurface: Colors.white,
+    );
+
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorScheme: scheme,
+    );
+  }
 }
