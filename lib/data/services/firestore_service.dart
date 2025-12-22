@@ -46,4 +46,15 @@ class FirestoreService {
       SetOptions(merge: merge),
     );
   }
+
+  // * Get Functionality
+  Future<DocumentSnapshot<Map<String, dynamic>>> get(String docPath) =>
+      doc(docPath).get();
+
+  // * Update Functionality
+  Future<void> update(String docPath, Map<String, dynamic> data) =>
+      doc(docPath).update(_withServerTimestamps(data));
+
+  // * Delete Functionality
+  Future<void> delete(String docPath) => doc(docPath).delete();
 }
