@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/models/book_model.dart';
@@ -61,13 +60,11 @@ class _Cover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (kDebugMode) print(url); // ! Debugging purposes, delete in production
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Image.network(
         // TODO: Fix getting image from URL
         url,
-        // "https://gpu.id/data-gpu/images/img-book/94726/petualangan_sukab.jpg",
         width: 64,
         height: 96,
         fit: BoxFit.cover,
