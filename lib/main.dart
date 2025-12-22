@@ -1,3 +1,5 @@
+import 'package:codexia/presentation/screens/auth/sign_in_screen.dart';
+import 'package:codexia/presentation/screens/auth/sign_up_screen.dart';
 import 'package:codexia/presentation/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:codexia/presentation/screens/explore/explore_screen.dart';
@@ -15,8 +17,12 @@ class MainApp extends StatelessWidget {
       theme: AppTheme.lightTheme(),
       darkTheme: AppTheme.darkTheme(),
       themeMode: ThemeMode.system,
-      initialRoute: '/',
-      routes: {'/': (context) => const ExploreScreen()},
+      initialRoute: '/sign-in',
+      routes: {
+        '/': (context) => const ExploreScreen(),
+        '/sign-in': (context) => const SignInScreen(),
+        '/sign-up': (context) => const SignUpScreen(),
+      },
     );
   }
 }
