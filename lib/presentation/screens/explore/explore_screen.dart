@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/models/book_model.dart';
-import '../../../data/repository/book_repository.dart';
+import '../../../data/repositories/book_repository.dart';
 import '../../widgets/books/book_item.dart';
 
 class ExploreScreen extends StatefulWidget {
