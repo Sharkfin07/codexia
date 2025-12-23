@@ -2,7 +2,7 @@ import 'package:codexia/presentation/providers/auth_provider.dart';
 import 'package:codexia/presentation/screens/auth/forgot_password_screen.dart';
 import 'package:codexia/presentation/screens/auth/sign_in_screen.dart';
 import 'package:codexia/presentation/screens/auth/sign_up_screen.dart';
-import 'package:codexia/presentation/screens/explore/explore_screen.dart';
+import 'package:codexia/presentation/screens/main/explore_screen.dart';
 import 'package:codexia/presentation/theme/app_theme.dart';
 
 import 'package:firebase_core/firebase_core.dart';

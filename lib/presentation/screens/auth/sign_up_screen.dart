@@ -1,5 +1,5 @@
 import 'package:codexia/presentation/providers/auth_provider.dart';
-import 'package:codexia/presentation/screens/explore/explore_screen.dart';
+import 'package:codexia/presentation/screens/main/explore_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
