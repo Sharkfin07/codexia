@@ -1,4 +1,5 @@
 import 'package:codexia/presentation/providers/auth_provider.dart';
+import 'package:codexia/presentation/screens/explore/explore_screen.dart';
 import 'package:codexia/presentation/widgets/global/global_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,7 +34,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         email: _emailCtrl.text.trim(),
         password: _passwordCtrl.text.trim(),
       );
-      if (mounted) navigator.pushReplacementNamed('/');
+      if (mounted)
+        navigator.pushReplacement(
+          MaterialPageRoute(builder: (_) => const ExploreScreen()),
+        );
     } catch (e) {
       if (!mounted) return;
       messenger.showSnackBar(SnackBar(content: Text(e.toString())));
