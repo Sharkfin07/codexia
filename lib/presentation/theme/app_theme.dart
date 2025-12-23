@@ -3,6 +3,7 @@ import './app_palette.dart';
 
 class AppTheme {
   static ThemeData lightTheme() {
+    print("light mode");
     final scheme = ColorScheme.light(
       primary: AppPalette.lightPrimary,
       secondary: AppPalette.lightSecondary,
@@ -21,13 +22,14 @@ class AppTheme {
   }
 
   static ThemeData darkTheme() {
+    print("dark mode");
     final scheme = ColorScheme.dark(
-      primary: AppPalette.darkPrimary,
-      secondary: AppPalette.darkSecondary,
+      primary: AppPalette.darkPink,
+      secondary: AppPalette.darkPrimary,
       surface: const Color(0xFF120A2A),
-      onPrimary: Colors.white,
-      onSecondary: Colors.white,
-      onSurface: Colors.white,
+      onPrimary: AppPalette.lightPrimary,
+      onSecondary: AppPalette.lightPrimary,
+      onSurface: AppPalette.lightPrimary,
     );
 
     return ThemeData(

@@ -48,14 +48,13 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final inputFill = scheme.surface.withOpacity(0.08);
+    final inputFill = scheme.surface.withValues(alpha: 0.08);
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: scheme.outline.withOpacity(0.5)),
+      borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.5)),
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign In')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -134,7 +133,6 @@ class _SignInScreenState extends State<SignInScreen> {
                       ? null
                       : () =>
                             Navigator.pushReplacementNamed(context, '/sign-up'),
-                  style: TextButton.styleFrom(foregroundColor: scheme.primary),
                   child: const Text("Don't have an account? Sign Up"),
                 ),
               ],
