@@ -1,31 +1,41 @@
+import 'package:codexia/presentation/providers/auth_provider.dart';
 import 'package:codexia/presentation/screens/auth/forgot_password_screen.dart';
 import 'package:codexia/presentation/screens/auth/sign_in_screen.dart';
 import 'package:codexia/presentation/screens/auth/sign_up_screen.dart';
-import 'package:codexia/presentation/theme/app_theme.dart';
 import 'package:codexia/presentation/screens/explore/explore_screen.dart';
+import 'package:codexia/presentation/theme/app_theme.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MainApp());
+  runApp(const ProviderScope(child: MainApp()));
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends ConsumerWidget {
   const MainApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authStateProvider);
+
     return MaterialApp(
       theme: AppTheme.lightTheme(),
       darkTheme: AppTheme.darkTheme(),
       themeMode: ThemeMode.system,
-      initialRoute: '/sign-in',
+      home: authState.when(
+        data: (user) =>
+            user != null ? const ExploreScreen() : const SignInScreen(),
+        loading: () =>
+            const Scaffold(body: Center(child: CircularProgressIndicator())),
+        error: (e, _) => Scaffold(body: Center(child: Text('Auth error: $e'))),
+      ),
       routes: {
-        '/': (context) => const ExploreScreen(),
         '/sign-in': (context) => const SignInScreen(),
         '/sign-up': (context) => const SignUpScreen(),
         '/forgot-password': (context) => const ForgotPasswordScreen(),
