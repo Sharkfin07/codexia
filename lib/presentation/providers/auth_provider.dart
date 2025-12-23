@@ -1,0 +1,71 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../data/services/auth_service.dart';
+
+part 'auth_provider.g.dart';
+
+@riverpod
+AuthService authService(Ref ref) => AuthService();
+
+@riverpod
+Stream<User?> authState(Ref ref) =>
+    ref.watch(authServiceProvider).authStateChanges;
+
+@riverpod
+class AuthController extends _$AuthController {
+  @override
+  AsyncValue<void> build() => const AsyncValue.data(null);
+
+  Future<void> signIn({required String email, required String password}) async {
+    state = const AsyncLoading();
+    try {
+      await ref
+          .read(authServiceProvider)
+          .signIn(email: email, password: password);
+      state = const AsyncData(null);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
+
+  Future<void> signUp({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    state = const AsyncLoading();
+    try {
+      await ref
+          .read(authServiceProvider)
+          .signUp(name: name, email: email, password: password);
+      state = const AsyncData(null);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
+
+  Future<void> sendPasswordReset(String email) async {
+    state = const AsyncLoading();
+    try {
+      await ref.read(authServiceProvider).resetPassword(email: email);
+      state = const AsyncData(null);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
+
+  Future<void> signOut() async {
+    state = const AsyncLoading();
+    try {
+      await ref.read(authServiceProvider).signOut();
+      state = const AsyncData(null);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
+}
