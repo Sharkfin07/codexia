@@ -1,21 +1,20 @@
+import 'package:codexia/presentation/providers/auth_provider.dart';
 import 'package:codexia/presentation/widgets/global/global_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../data/services/auth_service.dart';
-
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  ConsumerState<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInScreenState extends ConsumerState<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   bool _obscure = true;
-  bool _loading = false;
 
   @override
   void dispose() {
@@ -26,28 +25,25 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _loading = true);
+    final notifier = ref.read(authControllerProvider.notifier);
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
     try {
-      await AuthService().signIn(
+      await notifier.signIn(
         email: _emailCtrl.text.trim(),
         password: _passwordCtrl.text.trim(),
       );
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/');
-      }
+      if (mounted) navigator.pushReplacementNamed('/');
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    } finally {
-      if (mounted) setState(() => _loading = false);
+      if (!mounted) return;
+      messenger.showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authControllerProvider);
+    final isLoading = authState.isLoading;
     final scheme = Theme.of(context).colorScheme;
     final inputFill = scheme.surface.withValues(alpha: 0.08);
     final border = OutlineInputBorder(
@@ -149,7 +145,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   // * Submit Button
                   GlobalButton(
                     onPressed: _submit,
-                    isLoading: _loading,
+                    isLoading: isLoading,
                     variant: ButtonVariant.gradient,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -169,7 +165,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   GlobalButton(
                     variant: ButtonVariant.text,
                     fullWidth: false,
-                    isLoading: _loading,
+                    isLoading: isLoading,
                     onPressed: () =>
                         Navigator.pushReplacementNamed(context, '/sign-up'),
                     child: const Text("Don't have an account? Sign Up"),

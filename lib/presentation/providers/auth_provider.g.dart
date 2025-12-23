@@ -48,7 +48,7 @@ final class AuthServiceProvider
   }
 }
 
-String _$authServiceHash() => r'0dfa6cd7b3d2c42d27d44dbdbba6d3799e31f428';
+String _$authServiceHash() => r'ed0872794ec8e4cb3f50cb37b9c0b9467eb51ddb';
 
 @ProviderFor(authState)
 const authStateProvider = AuthStateProvider._();
@@ -81,7 +81,7 @@ final class AuthStateProvider
   }
 }
 
-String _$authStateHash() => r'fe51c8188d07f02e1fa3a2615719c379e85e2a92';
+String _$authStateHash() => r'aaf71d986649c5eef1b7e66f907833af9364df8e';
 
 @ProviderFor(AuthController)
 const authControllerProvider = AuthControllerProvider._();

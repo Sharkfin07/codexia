@@ -1,19 +1,20 @@
+import 'package:codexia/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../data/services/auth_service.dart';
 import '../../widgets/global/global_button.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
+class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
-  bool _loading = false;
 
   @override
   void dispose() {
@@ -23,26 +24,26 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _loading = true);
+    final notifier = ref.read(authControllerProvider.notifier);
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
     try {
-      await AuthService().resetPassword(email: _emailCtrl.text.trim());
+      await notifier.sendPasswordReset(_emailCtrl.text.trim());
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         const SnackBar(content: Text('Reset link sent. Check your email.')),
       );
-      Navigator.pop(context);
+      navigator.pop();
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
-    } finally {
-      if (mounted) setState(() => _loading = false);
+      messenger.showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authControllerProvider);
+    final isLoading = authState.isLoading;
     final scheme = Theme.of(context).colorScheme;
     final inputFill = scheme.surface.withValues(alpha: 0.08);
     final border = OutlineInputBorder(
@@ -90,7 +91,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                   GlobalButton(
                     onPressed: _submit,
-                    isLoading: _loading,
+                    isLoading: isLoading,
                     child: const Text('Send Reset Link'),
                   ),
 
@@ -99,7 +100,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   GlobalButton(
                     variant: ButtonVariant.text,
                     fullWidth: false,
-                    onPressed: _loading ? null : () => Navigator.pop(context),
+                    onPressed: isLoading ? null : () => Navigator.pop(context),
                     child: const Text('Back'),
                   ),
                 ],
