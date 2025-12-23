@@ -17,17 +17,49 @@ class AppTheme {
       brightness: Brightness.light,
       colorScheme: scheme,
       fontFamily: 'Poppins',
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: scheme.surface.withValues(alpha: 0.08),
+        labelStyle: TextStyle(color: scheme.onSurface),
+        errorStyle: TextStyle(color: scheme.error),
+        suffixIconColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.error)) return scheme.error;
+          if (states.contains(WidgetState.focused)) return scheme.primary;
+          return scheme.onSurface;
+        }),
+        prefixIconColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.error)) return scheme.error;
+          if (states.contains(WidgetState.focused)) return scheme.primary;
+          return scheme.onSurface;
+        }),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.5)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.primary, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.error),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.error, width: 1.5),
+        ),
+      ),
     );
   }
 
   static ThemeData darkTheme() {
     final scheme = ColorScheme.dark(
-      primary: AppPalette.darkPrimary,
-      secondary: AppPalette.darkSecondary,
+      primary: AppPalette.darkPink,
+      secondary: AppPalette.darkPrimary,
       surface: const Color(0xFF120A2A),
-      onPrimary: Colors.white,
-      onSecondary: Colors.white,
-      onSurface: Colors.white,
+      onPrimary: AppPalette.lightPrimary,
+      onSecondary: AppPalette.lightPrimary,
+      onSurface: AppPalette.lightPrimary,
     );
 
     return ThemeData(
@@ -35,6 +67,38 @@ class AppTheme {
       brightness: Brightness.dark,
       colorScheme: scheme,
       fontFamily: 'Poppins',
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: scheme.surface.withValues(alpha: 0.08),
+        labelStyle: TextStyle(color: scheme.onSurface),
+        errorStyle: TextStyle(color: scheme.error),
+        suffixIconColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.error)) return scheme.error;
+          if (states.contains(WidgetState.focused)) return scheme.primary;
+          return scheme.onSurface;
+        }),
+        prefixIconColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.error)) return scheme.error;
+          if (states.contains(WidgetState.focused)) return scheme.primary;
+          return scheme.onSurface;
+        }),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.5)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.primary, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.error),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.error, width: 1.5),
+        ),
+      ),
     );
   }
 }

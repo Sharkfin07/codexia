@@ -11,10 +11,18 @@ import 'package:flutter/material.dart';
  */
 
 class AppPalette {
-  static const lightPrimary = Color(0x00fffdfe);
-  static const lightSecondary = Color(0x00ffe9f2);
-  static const darkPrimary = Color(0x0010082d);
-  static const darkSecondary = Color(0x00180161);
-  static const lightPink = Color(0x00ffcce4);
-  static const darkPink = Color(0x00eb3678);
+  static const lightPrimary = Color(0xFFFFFDFE);
+  static const lightSecondary = Color(0xFFFFE9F2);
+  static const darkPrimary = Color(0xFF10082D);
+  static const darkSecondary = Color(0xFF180161);
+  static const lightPink = Color(0xFFFFCCE4);
+  static const darkPink = Color(0xFFEB3678);
+
+  // * Gradients
+  static const blossomGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment(0.8, 1),
+    colors: <Color>[Color(0xFFFFA3AC), Color(0xFFEB3678)],
+    tileMode: TileMode.mirror,
+  );
 }
