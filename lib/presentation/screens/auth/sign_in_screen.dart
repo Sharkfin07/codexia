@@ -108,11 +108,19 @@ class _SignInScreenState extends State<SignInScreen> {
                           width: 1.5,
                         ),
                       ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscure ? Icons.visibility : Icons.visibility_off,
+                      suffixIconConstraints: const BoxConstraints(
+                        minHeight: 36,
+                        minWidth: 36,
+                      ),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: IconButton(
+                          visualDensity: VisualDensity.compact,
+                          icon: Icon(
+                            _obscure ? Icons.visibility : Icons.visibility_off,
+                          ),
+                          onPressed: () => setState(() => _obscure = !_obscure),
                         ),
-                        onPressed: () => setState(() => _obscure = !_obscure),
                       ),
                     ),
                     validator: (v) {
@@ -120,6 +128,20 @@ class _SignInScreenState extends State<SignInScreen> {
                       if (v.length < 8) return 'Min 8 characters';
                       return null;
                     },
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  // * Forgot Password Button
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GlobalButton(
+                      variant: ButtonVariant.text,
+                      fullWidth: false,
+                      child: const Text("Forgot Password?"),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/forgot-password'),
+                    ),
                   ),
 
                   const SizedBox(height: 20),

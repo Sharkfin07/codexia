@@ -1,3 +1,4 @@
+import 'package:codexia/presentation/screens/auth/forgot_password_screen.dart';
 import 'package:codexia/presentation/screens/auth/sign_in_screen.dart';
 import 'package:codexia/presentation/screens/auth/sign_up_screen.dart';
 import 'package:codexia/presentation/theme/app_theme.dart';
@@ -22,6 +23,7 @@ class MainApp extends StatelessWidget {
         '/': (context) => const ExploreScreen(),
         '/sign-in': (context) => const SignInScreen(),
         '/sign-up': (context) => const SignUpScreen(),
+        '/forgot-password': (context) => const ForgotPasswordScreen(),
       },
     );
   }
