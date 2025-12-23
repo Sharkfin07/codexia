@@ -58,10 +58,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final inputFill = scheme.surface.withOpacity(0.08);
+    final inputFill = scheme.surface.withValues(alpha: 0.08);
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: scheme.outline.withOpacity(0.5)),
+      borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.5)),
     );
 
     return Scaffold(
@@ -116,8 +116,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     validator: (v) {
-                      if (v == null || v.trim().isEmpty)
+                      if (v == null || v.trim().isEmpty) {
                         return 'Email required';
+                      }
                       if (!v.contains('@')) return 'Invalid email';
                       return null;
                     },
@@ -131,7 +132,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     obscureText: _obscure,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      helperText: 'Min 8 chars, at least 1 letter & 1 number',
+                      helperText:
+                          'Must be at least 8 chars, include letters and numbers',
+                      helperStyle: TextStyle(
+                        color: scheme.onSurface.withValues(alpha: 0.3),
+                      ),
                       filled: true,
                       fillColor: inputFill,
                       enabledBorder: border,
@@ -163,7 +168,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   GlobalButton(
                     onPressed: _submit,
                     isLoading: _loading,
-                    child: const Text('Sign Up'),
+                    variant: ButtonVariant.gradient,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ),
 
                   const SizedBox(height: 12),

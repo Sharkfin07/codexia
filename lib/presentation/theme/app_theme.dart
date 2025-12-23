@@ -3,7 +3,6 @@ import './app_palette.dart';
 
 class AppTheme {
   static ThemeData lightTheme() {
-    print("light mode");
     final scheme = ColorScheme.light(
       primary: AppPalette.lightPrimary,
       secondary: AppPalette.lightSecondary,
@@ -18,11 +17,42 @@ class AppTheme {
       brightness: Brightness.light,
       colorScheme: scheme,
       fontFamily: 'Poppins',
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: scheme.surface.withValues(alpha: 0.08),
+        labelStyle: TextStyle(color: scheme.onSurface),
+        errorStyle: TextStyle(color: scheme.error),
+        suffixIconColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.error)) return scheme.error;
+          if (states.contains(WidgetState.focused)) return scheme.primary;
+          return scheme.onSurface;
+        }),
+        prefixIconColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.error)) return scheme.error;
+          if (states.contains(WidgetState.focused)) return scheme.primary;
+          return scheme.onSurface;
+        }),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.5)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.primary, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.error),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.error, width: 1.5),
+        ),
+      ),
     );
   }
 
   static ThemeData darkTheme() {
-    print("dark mode");
     final scheme = ColorScheme.dark(
       primary: AppPalette.darkPink,
       secondary: AppPalette.darkPrimary,
@@ -37,6 +67,38 @@ class AppTheme {
       brightness: Brightness.dark,
       colorScheme: scheme,
       fontFamily: 'Poppins',
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: scheme.surface.withValues(alpha: 0.08),
+        labelStyle: TextStyle(color: scheme.onSurface),
+        errorStyle: TextStyle(color: scheme.error),
+        suffixIconColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.error)) return scheme.error;
+          if (states.contains(WidgetState.focused)) return scheme.primary;
+          return scheme.onSurface;
+        }),
+        prefixIconColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.error)) return scheme.error;
+          if (states.contains(WidgetState.focused)) return scheme.primary;
+          return scheme.onSurface;
+        }),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.5)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.primary, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.error),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: scheme.error, width: 1.5),
+        ),
+      ),
     );
   }
 }

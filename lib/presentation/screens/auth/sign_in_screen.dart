@@ -49,10 +49,10 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final inputFill = scheme.surface.withOpacity(0.08);
+    final inputFill = scheme.surface.withValues(alpha: 0.08);
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: scheme.outline.withOpacity(0.5)),
+      borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.5)),
     );
 
     return Scaffold(
@@ -83,8 +83,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                     validator: (v) {
-                      if (v == null || v.trim().isEmpty)
+                      if (v == null || v.trim().isEmpty) {
                         return 'Email required';
+                      }
                       if (!v.contains('@')) return 'Invalid email';
                       return null;
                     },
@@ -127,7 +128,17 @@ class _SignInScreenState extends State<SignInScreen> {
                   GlobalButton(
                     onPressed: _submit,
                     isLoading: _loading,
-                    child: const Text('Sign In'),
+                    variant: ButtonVariant.gradient,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Text(
+                        'Sign In',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ),
 
                   const SizedBox(height: 12),
