@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/services/auth_service.dart';
+import '../../widgets/global/global_button.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -159,30 +160,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(height: 20),
 
                   // * Submit Button
-                  FilledButton(
-                    onPressed: _loading ? null : _submit,
-                    child: _loading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text('Sign Up'),
+                  GlobalButton(
+                    onPressed: _submit,
+                    isLoading: _loading,
+                    child: const Text('Sign Up'),
                   ),
 
                   const SizedBox(height: 12),
 
                   // * Sign In Button
-                  TextButton(
-                    onPressed: _loading
-                        ? null
-                        : () => Navigator.pushReplacementNamed(
-                            context,
-                            '/sign-in',
-                          ),
-                    style: TextButton.styleFrom(
-                      foregroundColor: scheme.primary,
-                    ),
+                  GlobalButton(
+                    variant: ButtonVariant.text,
+                    fullWidth: false,
+                    isLoading: _loading,
+                    onPressed: () =>
+                        Navigator.pushReplacementNamed(context, '/sign-in'),
                     child: const Text('Already have an account? Sign In'),
                   ),
                 ],

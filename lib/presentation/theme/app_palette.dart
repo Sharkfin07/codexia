@@ -17,4 +17,12 @@ class AppPalette {
   static const darkSecondary = Color(0xFF180161);
   static const lightPink = Color(0xFFFFCCE4);
   static const darkPink = Color(0xFFEB3678);
+
+  // * Gradients
+  static const blossomGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment(0.8, 1),
+    colors: <Color>[Color(0xFFFFA3AC), Color(0xFFEB3678)],
+    tileMode: TileMode.mirror,
+  );
 }

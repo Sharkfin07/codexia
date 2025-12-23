@@ -1,3 +1,4 @@
+import 'package:codexia/presentation/widgets/global/global_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/services/auth_service.dart';
@@ -48,94 +49,100 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final inputFill = scheme.surface.withValues(alpha: 0.08);
+    final inputFill = scheme.surface.withOpacity(0.08);
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.5)),
+      borderSide: BorderSide(color: scheme.outline.withOpacity(0.5)),
     );
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // * Email Form
-                TextFormField(
-                  controller: _emailCtrl,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    filled: true,
-                    fillColor: inputFill,
-                    enabledBorder: border,
-                    focusedBorder: border.copyWith(
-                      borderSide: BorderSide(color: scheme.primary, width: 1.5),
-                    ),
-                  ),
-                  validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Email required';
-                    if (!v.contains('@')) return 'Invalid email';
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: 12),
-
-                // * Password Form
-                TextFormField(
-                  controller: _passwordCtrl,
-                  obscureText: _obscure,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    filled: true,
-                    fillColor: inputFill,
-                    enabledBorder: border,
-                    focusedBorder: border.copyWith(
-                      borderSide: BorderSide(color: scheme.primary, width: 1.5),
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscure ? Icons.visibility : Icons.visibility_off,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // * Email Form
+                  TextFormField(
+                    controller: _emailCtrl,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      filled: true,
+                      fillColor: inputFill,
+                      enabledBorder: border,
+                      focusedBorder: border.copyWith(
+                        borderSide: BorderSide(
+                          color: scheme.primary,
+                          width: 1.5,
+                        ),
                       ),
-                      onPressed: () => setState(() => _obscure = !_obscure),
                     ),
+                    validator: (v) {
+                      if (v == null || v.trim().isEmpty)
+                        return 'Email required';
+                      if (!v.contains('@')) return 'Invalid email';
+                      return null;
+                    },
                   ),
-                  validator: (v) {
-                    if (v == null || v.isEmpty) return 'Password required';
-                    if (v.length < 8) return 'Min 8 characters';
-                    return null;
-                  },
-                ),
 
-                const SizedBox(height: 20),
+                  const SizedBox(height: 12),
 
-                // * Submit Button
-                FilledButton(
-                  onPressed: _loading ? null : _submit,
-                  child: _loading
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Sign In'),
-                ),
+                  // * Password Form
+                  TextFormField(
+                    controller: _passwordCtrl,
+                    obscureText: _obscure,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      filled: true,
+                      fillColor: inputFill,
+                      enabledBorder: border,
+                      focusedBorder: border.copyWith(
+                        borderSide: BorderSide(
+                          color: scheme.primary,
+                          width: 1.5,
+                        ),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscure ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () => setState(() => _obscure = !_obscure),
+                      ),
+                    ),
+                    validator: (v) {
+                      if (v == null || v.isEmpty) return 'Password required';
+                      if (v.length < 8) return 'Min 8 characters';
+                      return null;
+                    },
+                  ),
 
-                const SizedBox(height: 12),
+                  const SizedBox(height: 20),
 
-                // * Sign Up Button
-                TextButton(
-                  onPressed: _loading
-                      ? null
-                      : () =>
-                            Navigator.pushReplacementNamed(context, '/sign-up'),
-                  child: const Text("Don't have an account? Sign Up"),
-                ),
-              ],
+                  // * Submit Button
+                  GlobalButton(
+                    onPressed: _submit,
+                    isLoading: _loading,
+                    child: const Text('Sign In'),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // * Sign Up Button
+                  GlobalButton(
+                    variant: ButtonVariant.text,
+                    fullWidth: false,
+                    isLoading: _loading,
+                    onPressed: () =>
+                        Navigator.pushReplacementNamed(context, '/sign-up'),
+                    child: const Text("Don't have an account? Sign Up"),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
