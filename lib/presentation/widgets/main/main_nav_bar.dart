@@ -24,14 +24,15 @@ class MainNavBar extends StatelessWidget {
         color: Colors.white,
         tabs: [
           GButton(
-            icon: Icons.access_alarm_outlined,
+            icon: Icons.home_max_outlined,
             leading: LogoRegular(width: 30),
             text: 'Home',
           ),
-          GButton(icon: Icons.heart_broken_outlined, text: 'Likes'),
-          GButton(icon: Icons.thumb_down_alt_outlined, text: 'Search'),
+          GButton(icon: Icons.bookmark_add_outlined, text: 'Explore'),
+          GButton(icon: Icons.timelapse_outlined, text: 'Rentals'),
           GButton(icon: Icons.person_2_outlined, text: 'Profile'),
         ],
+        onTabChange: (index) {},
       ),
     );
   }
