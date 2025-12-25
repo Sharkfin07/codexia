@@ -76,4 +76,22 @@ class AuthController extends _$AuthController {
       rethrow;
     }
   }
+
+  Future<void> updateProfile({
+    required String name,
+    required String photoUrl,
+  }) async {
+    state = const AsyncLoading();
+    try {
+      await ref
+          .read(authServiceProvider)
+          .updateProfile(name: name, photoUrl: photoUrl);
+      if (!ref.mounted) return;
+      state = const AsyncData(null);
+    } catch (e, st) {
+      if (!ref.mounted) return;
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
 }

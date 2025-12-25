@@ -2,6 +2,7 @@ import 'package:codexia/presentation/providers/auth_provider.dart';
 import 'package:codexia/presentation/screens/auth/forgot_password_screen.dart';
 import 'package:codexia/presentation/screens/auth/sign_in_screen.dart';
 import 'package:codexia/presentation/screens/auth/sign_up_screen.dart';
+import 'package:codexia/presentation/screens/auth/edit_profile.dart';
 import 'package:codexia/presentation/screens/main/explore_screen.dart';
 import 'package:codexia/presentation/screens/main/profile_screen.dart';
 import 'package:codexia/presentation/theme/app_theme.dart';
@@ -40,6 +41,7 @@ class MainApp extends ConsumerWidget {
         '/sign-in': (context) => const SignInScreen(),
         '/sign-up': (context) => const SignUpScreen(),
         '/forgot-password': (context) => const ForgotPasswordScreen(),
+        '/edit-profile': (context) => const EditProfileScreen(),
         '/profile': (context) => const ProfileScreen(),
       },
     );

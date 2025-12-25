@@ -69,7 +69,7 @@ class ProfileScreen extends ConsumerWidget {
                 _ActionTile(
                   icon: Icons.edit_outlined,
                   label: 'Edit Profile',
-                  onTap: () => _comingSoon(context, 'Edit Profile'),
+                  onTap: () => Navigator.pushNamed(context, '/edit-profile'),
                 ),
                 _ActionTile(
                   icon: Icons.favorite_border,

@@ -1,13 +1,17 @@
+import 'package:codexia/presentation/providers/auth_provider.dart';
 import 'package:codexia/presentation/widgets/global/logo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../../theme/app_palette.dart';
 
-class MainNavBar extends StatelessWidget {
+class MainNavBar extends ConsumerWidget {
   const MainNavBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profileUrl = ref.read(authStateProvider).value?.photoURL;
+
     return Container(
       color: AppPalette.darkSecondary,
       padding: const EdgeInsets.all(8.0),
@@ -30,7 +34,20 @@ class MainNavBar extends StatelessWidget {
           ),
           GButton(icon: Icons.bookmark_add_outlined, text: 'Explore'),
           GButton(icon: Icons.timelapse_outlined, text: 'Rentals'),
-          GButton(icon: Icons.person_2_outlined, text: 'Profile'),
+          GButton(
+            icon: Icons.person_2_outlined,
+            text: 'Profile',
+            leading: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: AppPalette.lightPrimary, width: 1.0),
+              ),
+              child: CircleAvatar(
+                radius: 12,
+                backgroundImage: NetworkImage(profileUrl ?? ''),
+              ),
+            ),
+          ),
         ],
         onTabChange: (index) {},
       ),
