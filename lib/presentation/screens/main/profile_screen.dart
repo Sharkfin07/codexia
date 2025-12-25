@@ -107,31 +107,6 @@ class ProfileScreen extends ConsumerWidget {
                     backgroundColor: AppPalette.darkPink,
                   ),
                 ),
-                FilledButton.icon(
-                  onPressed: () async {
-                    try {
-                      await ref.read(authControllerProvider.notifier).signOut();
-                      if (context.mounted) {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          '/sign-in',
-                          (route) => false,
-                        );
-                      }
-                    } catch (e) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Logout gagal: $e')),
-                        );
-                      }
-                    }
-                  },
-                  icon: const Icon(Icons.logout),
-                  label: const Text('Logout'),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppPalette.darkPink,
-                  ),
-                ),
               ],
             );
           },
