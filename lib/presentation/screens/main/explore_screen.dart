@@ -1,4 +1,4 @@
-import 'package:codexia/presentation/widgets/global/logo.dart';
+import 'package:codexia/presentation/widgets/main/main_nav_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/models/book_model.dart';
@@ -82,74 +82,76 @@ class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const LogoRegular()),
-      body: RefreshIndicator(
-        onRefresh: () => _loadPage(refresh: true),
-        child: Builder(
-          builder: (context) {
-            if (_items.isEmpty && _isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () => _loadPage(refresh: true),
+          child: Builder(
+            builder: (context) {
+              if (_items.isEmpty && _isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            if (_items.isEmpty && _error != null) {
-              return Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Gagal memuat buku',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _error!,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    const SizedBox(height: 12),
-                    FilledButton(
-                      onPressed: () => _loadPage(refresh: true),
-                      child: const Text('Coba Lagi'),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            if (_items.isEmpty) {
-              return const Center(
-                child: Text('Belum ada buku untuk ditampilkan.'),
-              );
-            }
-
-            return ListView.separated(
-              controller: _scrollController,
-              itemCount: _items.length + (_hasMore ? 1 : 0),
-              separatorBuilder: (_, _) => const Divider(height: 1),
-              itemBuilder: (context, index) {
-                if (index >= _items.length) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-
-                final book = _items[index];
-                return BookItem(
-                  book: book,
-                  onTap: () {
-                    const tempSnackBar = SnackBar(
-                      content: Text('In progress yak'),
-                      duration: Duration(seconds: 3),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(tempSnackBar);
-                  },
+              if (_items.isEmpty && _error != null) {
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Gagal memuat buku',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        _error!,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: 12),
+                      FilledButton(
+                        onPressed: () => _loadPage(refresh: true),
+                        child: const Text('Coba Lagi'),
+                      ),
+                    ],
+                  ),
                 );
-              },
-            );
-          },
+              }
+
+              if (_items.isEmpty) {
+                return const Center(
+                  child: Text('Belum ada buku untuk ditampilkan.'),
+                );
+              }
+
+              return ListView.separated(
+                controller: _scrollController,
+                itemCount: _items.length + (_hasMore ? 1 : 0),
+                separatorBuilder: (_, _) => const Divider(height: 1),
+                itemBuilder: (context, index) {
+                  if (index >= _items.length) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  final book = _items[index];
+                  return BookItem(
+                    book: book,
+                    onTap: () {
+                      const tempSnackBar = SnackBar(
+                        content: Text('In progress yak'),
+                        duration: Duration(seconds: 3),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(tempSnackBar);
+                    },
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
+      bottomNavigationBar: MainNavBar(),
     );
   }
 }
