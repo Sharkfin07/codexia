@@ -1,3 +1,4 @@
+import 'package:codexia/presentation/widgets/global/logo.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/models/book_model.dart';
@@ -12,90 +13,142 @@ class ExploreScreen extends StatefulWidget {
 }
 
 class _ExploreScreenState extends State<ExploreScreen> {
-  late final BookRepository _repo;
-  late final Future<List<BookModel>> _future;
+  static const _pageSize = 10;
+
+  final BookRepository _repo = BookRepository();
+  final ScrollController _scrollController = ScrollController();
+
+  final List<BookModel> _items = [];
+  int _page = 1;
+  bool _isLoading = false;
+  bool _hasMore = true;
+  String? _error;
 
   @override
   void initState() {
     super.initState();
-    _repo = BookRepository();
-    _future = _repo.fetchBooks(pageSize: 10);
+    _loadPage();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients || _isLoading || !_hasMore) return;
+    final trigger = _scrollController.position.maxScrollExtent - 200;
+    if (_scrollController.position.pixels >= trigger) {
+      _loadPage();
+    }
+  }
+
+  Future<void> _loadPage({bool refresh = false}) async {
+    if (_isLoading) return;
+    if (refresh) {
+      setState(() {
+        _page = 1;
+        _hasMore = true;
+        _items.clear();
+        _error = null;
+      });
+    }
+
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final newItems = await _repo.fetchBooks(page: _page, pageSize: _pageSize);
+      setState(() {
+        _items.addAll(newItems);
+        _hasMore = newItems.length == _pageSize;
+        if (_hasMore) _page += 1;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+      });
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   @override
   void dispose() {
+    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Showcase Testing')),
-      body: FutureBuilder<List<BookModel>>(
-        future: _future,
-        // TODO: Implement infinite scroll
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      appBar: AppBar(title: const LogoRegular()),
+      body: RefreshIndicator(
+        onRefresh: () => _loadPage(refresh: true),
+        child: Builder(
+          builder: (context) {
+            if (_items.isEmpty && _isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Gagal memuat buku',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${snapshot.error}',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 12),
-                  FilledButton(
-                    onPressed: () => setState(() {
-                      _future = _repo.fetchBooks(pageSize: 10);
-                    }),
-                    child: const Text('Coba Lagi'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final books = snapshot.data ?? [];
-          if (books.isEmpty) {
-            return const Center(
-              child: Text('Belum ada buku untuk ditampilkan.'),
-            );
-          }
-
-          return ListView.separated(
-            itemCount: books.length,
-            separatorBuilder: (_, _) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              final book = books[index];
-              return BookItem(
-                book: book,
-                onTap: () {
-                  // TODO: navigate to detail page
-
-                  // ! Temp snackbar, hapus saat di production
-                  const tempSnackBar = SnackBar(
-                    content: Text("In progress yak"),
-                    duration: Duration(seconds: 3),
-                  );
-
-                  ScaffoldMessenger.of(context).showSnackBar(tempSnackBar);
-                  // !
-                },
+            if (_items.isEmpty && _error != null) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Gagal memuat buku',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _error!,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 12),
+                    FilledButton(
+                      onPressed: () => _loadPage(refresh: true),
+                      child: const Text('Coba Lagi'),
+                    ),
+                  ],
+                ),
               );
-            },
-          );
-        },
+            }
+
+            if (_items.isEmpty) {
+              return const Center(
+                child: Text('Belum ada buku untuk ditampilkan.'),
+              );
+            }
+
+            return ListView.separated(
+              controller: _scrollController,
+              itemCount: _items.length + (_hasMore ? 1 : 0),
+              separatorBuilder: (_, _) => const Divider(height: 1),
+              itemBuilder: (context, index) {
+                if (index >= _items.length) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                final book = _items[index];
+                return BookItem(
+                  book: book,
+                  onTap: () {
+                    const tempSnackBar = SnackBar(
+                      content: Text('In progress yak'),
+                      duration: Duration(seconds: 3),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(tempSnackBar);
+                  },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

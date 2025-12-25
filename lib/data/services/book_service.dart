@@ -24,6 +24,7 @@ class BookService {
           if (year != null) 'year': '$year',
           'sort': sort,
           'page': '$page',
+          'pageSize': '$pageSize',
         },
       );
 

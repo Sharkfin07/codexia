@@ -34,10 +34,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         email: _emailCtrl.text.trim(),
         password: _passwordCtrl.text.trim(),
       );
-      if (mounted)
+      if (mounted) {
         navigator.pushReplacement(
           MaterialPageRoute(builder: (_) => const ExploreScreen()),
         );
+      }
     } catch (e) {
       if (!mounted) return;
       messenger.showSnackBar(SnackBar(content: Text(e.toString())));
