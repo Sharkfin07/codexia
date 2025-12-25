@@ -81,11 +81,6 @@ class ProfileScreen extends ConsumerWidget {
                   label: 'Reset Password',
                   onTap: () => _comingSoon(context, 'Reset Password'),
                 ),
-                _ActionTile(
-                  icon: Icons.settings_outlined,
-                  label: 'Account Settings',
-                  onTap: () => _comingSoon(context, 'Account Settings'),
-                ),
                 const SizedBox(height: 12),
                 FilledButton.icon(
                   onPressed: () async {
@@ -104,10 +99,30 @@ class ProfileScreen extends ConsumerWidget {
                           SnackBar(content: Text('Logout gagal: $e')),
                         );
                       }
-
-                      // ! Debug; delete in production
-                      if (kDebugMode) {
-                        print(e);
+                    }
+                  },
+                  icon: const Icon(Icons.logout),
+                  label: const Text('Logout'),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppPalette.darkPink,
+                  ),
+                ),
+                FilledButton.icon(
+                  onPressed: () async {
+                    try {
+                      await ref.read(authControllerProvider.notifier).signOut();
+                      if (context.mounted) {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/sign-in',
+                          (route) => false,
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Logout gagal: $e')),
+                        );
                       }
                     }
                   },
@@ -124,7 +139,7 @@ class ProfileScreen extends ConsumerWidget {
           error: (err, _) => Center(child: Text('Gagal memuat profil: $err')),
         ),
       ),
-      bottomNavigationBar: MainNavBar(),
+      bottomNavigationBar: const MainNavBar(currentIndex: 3),
     );
   }
 

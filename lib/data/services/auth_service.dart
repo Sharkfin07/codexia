@@ -60,13 +60,11 @@ class AuthService {
 
     await user.updateDisplayName(name);
 
-    // Only update photo URL when provided
     final trimmedPhoto = photoUrl.trim();
     if (trimmedPhoto.isNotEmpty) {
       await user.updatePhotoURL(trimmedPhoto);
     }
 
-    // Update also in users collection (merge to avoid overwriting other fields)
     final fsService = FirestoreService.instance;
 
     await fsService.set('users/${user.uid}', {'name': name}, merge: true);
@@ -75,10 +73,10 @@ class AuthService {
       'photoUrl': photoUrl,
     }, merge: true);
 
-    // Refresh the auth user so listeners (authStateChanges) get the latest data
     await user.reload();
   }
 
+  // ! Reauthenticate Needed
   Future<void> deleteAccount({
     required String email,
     required String password,
@@ -95,6 +93,7 @@ class AuthService {
     await signOut();
   }
 
+  // ! Reauthenticate Needed
   Future<void> resetPasswordFromCurrentPassword({
     required String currentPassword,
     required String newPassword,
