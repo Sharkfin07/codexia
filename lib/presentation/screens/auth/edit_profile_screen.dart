@@ -42,16 +42,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         photoUrl: _photoCtrl.text.trim(),
       );
       if (!mounted) return;
-      // Refresh auth state so Profile screen immediately reflects new data
       ref.invalidate(authStateProvider);
       messenger.showSnackBar(
-        const SnackBar(content: Text('Profil berhasil diperbarui.')),
+        const SnackBar(content: Text('Profile updated successfully.')),
       );
       navigator.pop();
     } catch (e) {
       if (!mounted) return;
       messenger.showSnackBar(
-        SnackBar(content: Text('Gagal memperbarui profil: $e')),
+        SnackBar(content: Text('Failed to update profile: $e')),
       );
     }
   }
@@ -79,7 +78,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 TextFormField(
                   controller: _nameCtrl,
                   decoration: InputDecoration(
-                    labelText: 'Nama',
+                    labelText: 'Name',
                     filled: true,
                     fillColor: scheme.surface.withValues(alpha: 0.08),
                     enabledBorder: border,
@@ -89,7 +88,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   ),
                   validator: (v) {
                     if (v == null || v.trim().isEmpty) {
-                      return 'Nama tidak boleh kosong';
+                      return 'Name cannot be empty';
                     }
                     return null;
                   },
@@ -111,7 +110,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     final uri = Uri.tryParse(v);
                     if (uri == null ||
                         !(uri.isScheme('http') || uri.isScheme('https'))) {
-                      return 'URL tidak valid';
+                      return 'Invalid URL';
                     }
                     return null;
                   },
@@ -120,7 +119,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 FilledButton.icon(
                   onPressed: isLoading ? null : _submit,
                   icon: const Icon(Icons.save_outlined),
-                  label: Text(isLoading ? 'Menyimpan...' : 'Simpan'),
+                  label: Text(isLoading ? 'Saving...' : 'Save'),
                   style: FilledButton.styleFrom(
                     minimumSize: const Size.fromHeight(48),
                     backgroundColor: AppPalette.darkPink,

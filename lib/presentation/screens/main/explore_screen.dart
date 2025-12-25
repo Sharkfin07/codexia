@@ -97,7 +97,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Gagal memuat buku',
+                        'Failed to load books',
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
@@ -109,7 +109,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       const SizedBox(height: 12),
                       FilledButton(
                         onPressed: () => _loadPage(refresh: true),
-                        child: const Text('Coba Lagi'),
+                        child: const Text('Try Again'),
                       ),
                     ],
                   ),
@@ -117,9 +117,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               }
 
               if (_items.isEmpty) {
-                return const Center(
-                  child: Text('Belum ada buku untuk ditampilkan.'),
-                );
+                return const Center(child: Text('No books to display yet.'));
               }
 
               return ListView.separated(
@@ -139,7 +137,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     book: book,
                     onTap: () {
                       const tempSnackBar = SnackBar(
-                        content: Text('In progress yak'),
+                        content: Text('In progress'),
                         duration: Duration(seconds: 3),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(tempSnackBar);

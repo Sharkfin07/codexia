@@ -94,4 +94,27 @@ class AuthController extends _$AuthController {
       rethrow;
     }
   }
+
+  Future<void> changePassword({
+    required String email,
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    state = const AsyncLoading();
+    try {
+      await ref
+          .read(authServiceProvider)
+          .resetPasswordFromCurrentPassword(
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+            email: email,
+          );
+      if (!ref.mounted) return;
+      state = const AsyncData(null);
+    } catch (e, st) {
+      if (!ref.mounted) return;
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
 }

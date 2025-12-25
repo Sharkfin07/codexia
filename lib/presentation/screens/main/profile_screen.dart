@@ -1,5 +1,4 @@
 import 'package:codexia/presentation/widgets/main/main_nav_bar.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,7 +17,9 @@ class ProfileScreen extends ConsumerWidget {
         child: userAsync.when(
           data: (user) {
             if (user == null) {
-              return const Center(child: Text('Belum ada user yang login.'));
+              return const Center(
+                child: Text('No user is currently signed in.'),
+              );
             }
 
             final displayName = user.displayName?.trim();
@@ -69,7 +70,7 @@ class ProfileScreen extends ConsumerWidget {
                 _ActionTile(
                   icon: Icons.edit_outlined,
                   label: 'Edit Profile',
-                  onTap: () => Navigator.pushNamed(context, '/edit-profile'),
+                  onTap: () => Navigator.pushNamed(context, '/profile/edit'),
                 ),
                 _ActionTile(
                   icon: Icons.favorite_border,
@@ -78,8 +79,9 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 _ActionTile(
                   icon: Icons.lock_reset,
-                  label: 'Reset Password',
-                  onTap: () => _comingSoon(context, 'Reset Password'),
+                  label: 'Change Password',
+                  onTap: () =>
+                      Navigator.pushNamed(context, '/profile/reset-password'),
                 ),
                 const SizedBox(height: 12),
                 FilledButton.icon(
@@ -96,7 +98,7 @@ class ProfileScreen extends ConsumerWidget {
                     } catch (e) {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Logout gagal: $e')),
+                          SnackBar(content: Text('Logout failed: $e')),
                         );
                       }
                     }
@@ -111,7 +113,8 @@ class ProfileScreen extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, _) => Center(child: Text('Gagal memuat profil: $err')),
+          error: (err, _) =>
+              Center(child: Text('Failed to load profile: $err')),
         ),
       ),
       bottomNavigationBar: const MainNavBar(currentIndex: 3),
@@ -121,7 +124,7 @@ class ProfileScreen extends ConsumerWidget {
   void _comingSoon(BuildContext context, String feature) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('$feature akan segera hadir.')));
+    ).showSnackBar(SnackBar(content: Text('$feature coming soon.')));
   }
 }
 
