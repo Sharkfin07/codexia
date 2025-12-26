@@ -43,6 +43,14 @@ class BookRepository {
       throw BookRepositoryException(e.message);
     }
   }
+
+  Future<List<String>> fetchGenres() async {
+    try {
+      return await _service.fetchGenres();
+    } on BookServiceException catch (e) {
+      throw BookRepositoryException(e.message);
+    }
+  }
 }
 
 enum BookSort {

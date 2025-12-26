@@ -1,155 +1,143 @@
+import 'package:codexia/presentation/screens/explore/filter_screen.dart';
 import 'package:codexia/presentation/widgets/main/main_nav_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/models/book_model.dart';
-import '../../../data/repositories/book_repository.dart';
-import '../../widgets/books/book_item.dart';
-
-class ExploreScreen extends StatefulWidget {
+class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
 
-  @override
-  State<ExploreScreen> createState() => _ExploreScreenState();
-}
-
-class _ExploreScreenState extends State<ExploreScreen> {
-  static const _pageSize = 10;
-
-  final BookRepository _repo = BookRepository();
-  final ScrollController _scrollController = ScrollController();
-
-  final List<BookModel> _items = [];
-  int _page = 1;
-  bool _isLoading = false;
-  bool _hasMore = true;
-  String? _error;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPage();
-    _scrollController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (!_scrollController.hasClients || _isLoading || !_hasMore) return;
-    final trigger = _scrollController.position.maxScrollExtent - 200;
-    if (_scrollController.position.pixels >= trigger) {
-      _loadPage();
-    }
-  }
-
-  Future<void> _loadPage({bool refresh = false}) async {
-    if (_isLoading) return;
-    if (refresh) {
-      setState(() {
-        _page = 1;
-        _hasMore = true;
-        _items.clear();
-        _error = null;
-      });
-    }
-
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-
-    try {
-      final newItems = await _repo.fetchBooks(page: _page, pageSize: _pageSize);
-      setState(() {
-        _items.addAll(newItems);
-        _hasMore = newItems.length == _pageSize;
-        if (_hasMore) _page += 1;
-      });
-    } catch (e) {
-      setState(() {
-        _error = e.toString();
-      });
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
+  void _showComingSoon(BuildContext context) {
+    const snackBar = SnackBar(
+      content: Text('Coming soon. We are training Dex for you!'),
+      duration: Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('Explore')),
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () => _loadPage(refresh: true),
-          child: Builder(
-            builder: (context) {
-              if (_items.isEmpty && _isLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (_items.isEmpty && _error != null) {
-                return Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Failed to load books',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _error!,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const SizedBox(height: 12),
-                      FilledButton(
-                        onPressed: () => _loadPage(refresh: true),
-                        child: const Text('Try Again'),
-                      ),
-                    ],
-                  ),
-                );
-              }
-
-              if (_items.isEmpty) {
-                return const Center(child: Text('No books to display yet.'));
-              }
-
-              return ListView.separated(
-                controller: _scrollController,
-                itemCount: _items.length + (_hasMore ? 1 : 0),
-                separatorBuilder: (_, _) => const Divider(height: 1),
-                itemBuilder: (context, index) {
-                  if (index >= _items.length) {
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  }
-
-                  final book = _items[index];
-                  return BookItem(
-                    book: book,
-                    onTap: () {
-                      const tempSnackBar = SnackBar(
-                        content: Text('In progress'),
-                        duration: Duration(seconds: 3),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(tempSnackBar);
-                    },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Pick how you want to explore books today.',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 16),
+              _OptionCard(
+                title: 'Filter',
+                description:
+                    'Narrow down by genre, keyword, year, and page, then sort the results.',
+                icon: Icons.tune_outlined,
+                accent: Colors.blueAccent,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const FilterScreen()),
                   );
                 },
-              );
-            },
+                cta: 'Open Filters',
+              ),
+              _OptionCard(
+                title: 'Ask Dex',
+                description:
+                    'Answer a few questions and let Dex pick a book for you.',
+                icon: Icons.chat_bubble_outline,
+                accent: Colors.orangeAccent,
+                onTap: () => _showComingSoon(context),
+                cta: 'Chat with Dex',
+              ),
+              _OptionCard(
+                title: 'Surprise Me',
+                description:
+                    'Skip filters and jump to a random book recommendation.',
+                icon: Icons.auto_awesome_outlined,
+                accent: Colors.purpleAccent,
+                onTap: () => _showComingSoon(context),
+                cta: 'Roll the Dice',
+              ),
+            ],
           ),
         ),
       ),
       bottomNavigationBar: const MainNavBar(currentIndex: 1),
+    );
+  }
+}
+
+class _OptionCard extends StatelessWidget {
+  const _OptionCard({
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.accent,
+    required this.onTap,
+    required this.cta,
+  });
+
+  final String title;
+  final String description;
+  final IconData icon;
+  final Color accent;
+  final VoidCallback onTap;
+  final String cta;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 2,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: accent.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, color: accent),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        description,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        cta,
+                        style: TextStyle(
+                          color: accent,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right, color: Colors.grey),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
