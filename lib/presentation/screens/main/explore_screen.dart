@@ -6,14 +6,6 @@ import 'package:flutter/material.dart';
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
 
-  void _showComingSoon(BuildContext context) {
-    const snackBar = SnackBar(
-      content: Text('Coming soon. We are training Dex for you!'),
-      duration: Duration(seconds: 2),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,15 +33,6 @@ class ExploreScreen extends StatelessWidget {
                   );
                 },
                 cta: 'Open Filters',
-              ),
-              _OptionCard(
-                title: 'Ask Dex',
-                description:
-                    'Answer a few questions and let Dex pick a book for you.',
-                icon: Icons.chat_bubble_outline,
-                accent: Colors.orangeAccent,
-                onTap: () => _showComingSoon(context),
-                cta: 'Chat with Dex',
               ),
               _OptionCard(
                 title: 'Surprise Me',
@@ -109,7 +92,7 @@ class _OptionCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: accent.withOpacity(0.1),
+                    color: accent.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(icon, color: accent),
