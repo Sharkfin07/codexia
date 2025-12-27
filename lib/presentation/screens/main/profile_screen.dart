@@ -75,7 +75,7 @@ class ProfileScreen extends ConsumerWidget {
                 _ActionTile(
                   icon: Icons.favorite_border,
                   label: 'My Wishlist',
-                  onTap: () => _comingSoon(context, 'My Wishlist'),
+                  onTap: () => Navigator.pushNamed(context, '/wishlist'),
                 ),
                 _ActionTile(
                   icon: Icons.lock_reset,
@@ -125,12 +125,6 @@ class ProfileScreen extends ConsumerWidget {
       ),
       bottomNavigationBar: const MainNavBar(currentIndex: 3),
     );
-  }
-
-  void _comingSoon(BuildContext context, String feature) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('$feature coming soon.')));
   }
 }
 

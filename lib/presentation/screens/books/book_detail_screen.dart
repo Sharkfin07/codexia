@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../data/models/book_model.dart';
 import '../../../presentation/providers/book_detail_provider.dart';
+import '../../providers/wishlist_provider.dart';
 import '../order/rent_book_screen.dart';
 
 class BookDetailArgs {
@@ -47,6 +48,11 @@ class BookDetailScreen extends ConsumerWidget {
 
     final asyncDetail = ref.watch(bookDetailProvider(id));
     final fallback = initialBook;
+    final wishlist = ref.watch(wishlistProvider);
+    final currentBook = asyncDetail.asData?.value ?? fallback;
+    final isWishlisted =
+        currentBook != null &&
+        (wishlist.value?.any((w) => w.id == id) ?? false);
 
     return Scaffold(
       appBar: AppBar(
@@ -57,10 +63,25 @@ class BookDetailScreen extends ConsumerWidget {
             Text('Book Detail'),
           ],
         ),
+        actions: [
+          IconButton(
+            onPressed: currentBook == null
+                ? null
+                : () => ref.read(wishlistProvider.notifier).toggle(currentBook),
+            icon: Icon(
+              isWishlisted ? Icons.favorite : Icons.favorite_border,
+              color: AppPalette.darkPink,
+            ),
+            tooltip: isWishlisted ? 'Remove from wishlist' : 'Add to wishlist',
+          ),
+        ],
       ),
       body: asyncDetail.when(
         data: (book) => _DetailBody(
           book: book,
+          isWishlisted: isWishlisted,
+          onToggleWishlist: () =>
+              ref.read(wishlistProvider.notifier).toggle(book),
           onRefresh: () async {
             ref.invalidate(bookDetailProvider(id));
             await ref.read(bookDetailProvider(id).future);
@@ -69,6 +90,10 @@ class BookDetailScreen extends ConsumerWidget {
         loading: () => _DetailBody(
           book: fallback,
           isLoading: true,
+          isWishlisted: isWishlisted,
+          onToggleWishlist: fallback == null
+              ? null
+              : () => ref.read(wishlistProvider.notifier).toggle(fallback),
           onRefresh: () async {
             ref.invalidate(bookDetailProvider(id));
             await ref.read(bookDetailProvider(id).future);
@@ -87,11 +112,15 @@ class BookDetailScreen extends ConsumerWidget {
 class _DetailBody extends StatelessWidget {
   const _DetailBody({
     required this.book,
+    required this.isWishlisted,
+    required this.onToggleWishlist,
     this.isLoading = false,
     this.onRefresh,
   });
 
   final BookModel? book;
+  final bool isWishlisted;
+  final VoidCallback? onToggleWishlist;
   final bool isLoading;
   final Future<void> Function()? onRefresh;
 
@@ -160,7 +189,11 @@ class _DetailBody extends StatelessWidget {
             const SizedBox(height: 16),
             _PriceTag(price: book!.price),
             const SizedBox(height: 16),
-            _ActionButtons(book: book!),
+            _ActionButtons(
+              book: book!,
+              isWishlisted: isWishlisted,
+              onToggleWishlist: onToggleWishlist,
+            ),
             const SizedBox(height: 16),
             Text(
               'Summary',
@@ -248,9 +281,15 @@ class _PriceTag extends StatelessWidget {
 }
 
 class _ActionButtons extends StatelessWidget {
-  const _ActionButtons({required this.book});
+  const _ActionButtons({
+    required this.book,
+    required this.isWishlisted,
+    required this.onToggleWishlist,
+  });
 
   final BookModel book;
+  final bool isWishlisted;
+  final VoidCallback? onToggleWishlist;
 
   @override
   Widget build(BuildContext context) {
@@ -273,6 +312,7 @@ class _ActionButtons extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppPalette.darkPink,
               foregroundColor: AppPalette.lightPink,
+              minimumSize: const Size.fromHeight(48),
             ),
           ),
         ),
@@ -289,6 +329,7 @@ class _ActionButtons extends StatelessWidget {
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: AppPalette.darkPink),
               foregroundColor: AppPalette.darkPink,
+              minimumSize: const Size.fromHeight(48),
             ),
           ),
         ),

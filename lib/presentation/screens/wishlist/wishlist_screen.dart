@@ -12,11 +12,32 @@ class WishlistScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(wishlistProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Wishlist')),
+      appBar: AppBar(
+        title: const Row(
+          children: [
+            Icon(Icons.favorite),
+            SizedBox(width: 10),
+            Text('Wishlist'),
+          ],
+        ),
+      ),
       body: state.when(
-        data: (items) => _WishlistList(items: items),
+        data: (items) => RefreshIndicator(
+          onRefresh: () => ref.refresh(wishlistProvider.future),
+          child: _WishlistList(items: items),
+        ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Failed to load: $e')),
+        error: (e, _) => RefreshIndicator(
+          onRefresh: () => ref.refresh(wishlistProvider.future),
+          child: ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Text('Failed to load: $e'),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -32,7 +53,20 @@ class _WishlistList extends ConsumerWidget {
       return const Center(
         child: Padding(
           padding: EdgeInsets.all(24.0),
-          child: Text('No wishlist items yet. Start adding your favorites!'),
+          child: Opacity(
+            opacity: 0.2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.question_mark_rounded),
+                SizedBox(height: 10),
+                Text(
+                  'No wishlist items yet. Start adding your favorites!',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
         ),
       );
     }
@@ -51,6 +85,12 @@ class _WishlistList extends ConsumerWidget {
               width: 48,
               height: 72,
               fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => Container(
+                width: 48,
+                height: 72,
+                color: Colors.grey.shade300,
+                child: const Icon(Icons.book_outlined, size: 28),
+              ),
             ),
           ),
           title: Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis),
