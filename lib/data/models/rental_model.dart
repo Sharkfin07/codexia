@@ -10,6 +10,10 @@ class RentalModel {
   final String bookTitle;
   final String coverUrl;
 
+  final int rentalDays;
+  final int pricePerDay;
+  final int totalPrice;
+
   final DateTime rentedAt;
   final DateTime dueDate;
   final DateTime? returnedAt;
@@ -22,6 +26,9 @@ class RentalModel {
     required this.bookId,
     required this.bookTitle,
     required this.coverUrl,
+    required this.rentalDays,
+    required this.pricePerDay,
+    required this.totalPrice,
     required this.rentedAt,
     required this.dueDate,
     this.returnedAt,
@@ -29,18 +36,27 @@ class RentalModel {
   });
 
   factory RentalModel.fromMap(Map<String, dynamic> map) {
+    final status = RentalStatus.values.firstWhere(
+      (e) => e.name == map['status'],
+      orElse: () => RentalStatus.active,
+    );
+    final dueDate = DateTime.parse(map['dueDate']);
+
     return RentalModel(
       rentalId: map['rentalId'],
       userId: map['userId'],
       bookId: map['bookId'],
       bookTitle: map['bookTitle'],
       coverUrl: map['coverUrl'],
+      rentalDays: map['rentalDays'] ?? 0,
+      pricePerDay: map['pricePerDay'] ?? 0,
+      totalPrice: map['totalPrice'] ?? 0,
       rentedAt: DateTime.parse(map['rentedAt']),
-      dueDate: DateTime.parse(map['dueDate']),
+      dueDate: dueDate,
       returnedAt: map['returnedAt'] != null
           ? DateTime.parse(map['returnedAt'])
           : null,
-      status: RentalStatus.values.firstWhere((e) => e.name == map['status']),
+      status: status,
     );
   }
 
@@ -51,11 +67,21 @@ class RentalModel {
       'bookId': bookId,
       'bookTitle': bookTitle,
       'coverUrl': coverUrl,
+      'rentalDays': rentalDays,
+      'pricePerDay': pricePerDay,
+      'totalPrice': totalPrice,
       'rentedAt': rentedAt.toIso8601String(),
       'dueDate': dueDate.toIso8601String(),
       'returnedAt': returnedAt?.toIso8601String(),
       'status': status.name,
     };
+  }
+
+  RentalStatus get effectiveStatus {
+    if (status == RentalStatus.active && DateTime.now().isAfter(dueDate)) {
+      return RentalStatus.overdue;
+    }
+    return status;
   }
 }
 

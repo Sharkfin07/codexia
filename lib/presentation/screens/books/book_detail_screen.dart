@@ -1,9 +1,12 @@
 import 'package:codexia/presentation/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../data/models/book_model.dart';
 import '../../../presentation/providers/book_detail_provider.dart';
+import '../../providers/wishlist_provider.dart';
+import '../order/rent_book_screen.dart';
 
 class BookDetailArgs {
   const BookDetailArgs({required this.id, this.prefetched});
@@ -45,6 +48,11 @@ class BookDetailScreen extends ConsumerWidget {
 
     final asyncDetail = ref.watch(bookDetailProvider(id));
     final fallback = initialBook;
+    final wishlist = ref.watch(wishlistProvider);
+    final currentBook = asyncDetail.asData?.value ?? fallback;
+    final isWishlisted =
+        currentBook != null &&
+        (wishlist.value?.any((w) => w.id == id) ?? false);
 
     return Scaffold(
       appBar: AppBar(
@@ -55,10 +63,25 @@ class BookDetailScreen extends ConsumerWidget {
             Text('Book Detail'),
           ],
         ),
+        actions: [
+          IconButton(
+            onPressed: currentBook == null
+                ? null
+                : () => ref.read(wishlistProvider.notifier).toggle(currentBook),
+            icon: Icon(
+              isWishlisted ? Icons.favorite : Icons.favorite_border,
+              color: AppPalette.darkPink,
+            ),
+            tooltip: isWishlisted ? 'Remove from wishlist' : 'Add to wishlist',
+          ),
+        ],
       ),
       body: asyncDetail.when(
         data: (book) => _DetailBody(
           book: book,
+          isWishlisted: isWishlisted,
+          onToggleWishlist: () =>
+              ref.read(wishlistProvider.notifier).toggle(book),
           onRefresh: () async {
             ref.invalidate(bookDetailProvider(id));
             await ref.read(bookDetailProvider(id).future);
@@ -67,6 +90,10 @@ class BookDetailScreen extends ConsumerWidget {
         loading: () => _DetailBody(
           book: fallback,
           isLoading: true,
+          isWishlisted: isWishlisted,
+          onToggleWishlist: fallback == null
+              ? null
+              : () => ref.read(wishlistProvider.notifier).toggle(fallback),
           onRefresh: () async {
             ref.invalidate(bookDetailProvider(id));
             await ref.read(bookDetailProvider(id).future);
@@ -85,11 +112,15 @@ class BookDetailScreen extends ConsumerWidget {
 class _DetailBody extends StatelessWidget {
   const _DetailBody({
     required this.book,
+    required this.isWishlisted,
+    required this.onToggleWishlist,
     this.isLoading = false,
     this.onRefresh,
   });
 
   final BookModel? book;
+  final bool isWishlisted;
+  final VoidCallback? onToggleWishlist;
   final bool isLoading;
   final Future<void> Function()? onRefresh;
 
@@ -158,7 +189,16 @@ class _DetailBody extends StatelessWidget {
             const SizedBox(height: 16),
             _PriceTag(price: book!.price),
             const SizedBox(height: 16),
-            Text('Summary', style: Theme.of(context).textTheme.titleMedium),
+            _ActionButtons(
+              book: book!,
+              isWishlisted: isWishlisted,
+              onToggleWishlist: onToggleWishlist,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Summary',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Text(book!.summary, style: Theme.of(context).textTheme.bodyMedium),
           ],
@@ -210,7 +250,10 @@ class _MetaChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Chip(avatar: Icon(icon, size: 18), label: Text(label));
+    return Chip(
+      avatar: Icon(icon, size: 18, color: AppPalette.darkPink),
+      label: Text(label),
+    );
   }
 }
 
@@ -230,6 +273,64 @@ class _PriceTag extends StatelessWidget {
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             color: Colors.green.shade800,
             fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ActionButtons extends StatelessWidget {
+  const _ActionButtons({
+    required this.book,
+    required this.isWishlisted,
+    required this.onToggleWishlist,
+  });
+
+  final BookModel book;
+  final bool isWishlisted;
+  final VoidCallback? onToggleWishlist;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () async {
+              final query = Uri.encodeComponent('${book.title} buy book');
+              final url = 'https://www.google.com/search?q=$query';
+              final launched = await launchUrlString(url);
+              if (!launched && context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Could not open buy link')),
+                );
+              }
+            },
+            icon: const Icon(Icons.shopping_cart_outlined),
+            label: const Text('Buy'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppPalette.darkPink,
+              foregroundColor: AppPalette.lightPink,
+              minimumSize: const Size.fromHeight(48),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: () {
+              Navigator.of(
+                context,
+              ).pushNamed('/books/rent', arguments: RentBookArgs(book: book));
+            },
+            icon: const Icon(Icons.assignment_outlined),
+            label: const Text('Rent'),
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: AppPalette.darkPink),
+              foregroundColor: AppPalette.darkPink,
+              minimumSize: const Size.fromHeight(48),
+            ),
           ),
         ),
       ],

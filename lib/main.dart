@@ -10,6 +10,8 @@ import 'package:codexia/presentation/screens/main/explore_screen.dart';
 import 'package:codexia/presentation/screens/main/home_screen.dart';
 import 'package:codexia/presentation/screens/main/profile_screen.dart';
 import 'package:codexia/presentation/screens/main/rental_screen.dart';
+import 'package:codexia/presentation/screens/order/rent_book_screen.dart';
+import 'package:codexia/presentation/screens/wishlist/wishlist_screen.dart';
 import 'package:codexia/presentation/theme/app_theme.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -35,6 +37,7 @@ class MainApp extends ConsumerWidget {
       theme: AppTheme.lightTheme(),
       darkTheme: AppTheme.darkTheme(),
       themeMode: ThemeMode.system,
+      debugShowCheckedModeBanner: false,
       home: authState.when(
         data: (user) =>
             user != null ? const HomeScreen() : const SignInScreen(),
@@ -56,6 +59,11 @@ class MainApp extends ConsumerWidget {
           final args = ModalRoute.of(context)?.settings.arguments;
           return BookDetailScreen.fromRoute(args);
         },
+        '/books/rent': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          return RentBookScreen.fromRoute(args);
+        },
+        '/wishlist': (context) => const WishlistScreen(),
         '/home': (context) => const HomeScreen(),
       },
     );
