@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../data/models/book_model.dart';
 import '../../../data/repositories/book_repository.dart';
+import '../books/book_detail.dart';
 import '../../widgets/books/book_item.dart';
 import '../../widgets/main/main_nav_bar.dart';
 
@@ -216,7 +217,10 @@ class _FilterScreenState extends State<FilterScreen> {
                     return ListView.separated(
                       controller: _scrollController,
                       itemCount: _items.length + (_hasMore ? 1 : 0),
-                      separatorBuilder: (_, _) => const Divider(height: 1),
+                      separatorBuilder: (_, _) => const Divider(
+                        height: 1,
+                        color: AppPalette.darkSecondary,
+                      ),
                       itemBuilder: (context, index) {
                         if (index >= _items.length) {
                           return const Padding(
@@ -229,13 +233,13 @@ class _FilterScreenState extends State<FilterScreen> {
                         return BookItem(
                           book: book,
                           onTap: () {
-                            const tempSnackBar = SnackBar(
-                              content: Text('Book detail coming soon.'),
-                              duration: Duration(seconds: 2),
+                            Navigator.of(context).pushNamed(
+                              '/books/detail',
+                              arguments: BookDetailArgs(
+                                id: book.id,
+                                prefetched: book,
+                              ),
                             );
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(tempSnackBar);
                           },
                         );
                       },

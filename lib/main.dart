@@ -4,6 +4,7 @@ import 'package:codexia/presentation/screens/auth/sign_in_screen.dart';
 import 'package:codexia/presentation/screens/auth/sign_up_screen.dart';
 import 'package:codexia/presentation/screens/auth/edit_profile_screen.dart';
 import 'package:codexia/presentation/screens/auth/reset_password_screen.dart';
+import 'package:codexia/presentation/screens/books/book_detail.dart';
 import 'package:codexia/presentation/screens/explore/filter_screen.dart';
 import 'package:codexia/presentation/screens/main/explore_screen.dart';
 import 'package:codexia/presentation/screens/main/home_screen.dart';
@@ -51,6 +52,10 @@ class MainApp extends ConsumerWidget {
         '/rental': (context) => const RentalScreen(),
         '/explore': (context) => const ExploreScreen(),
         '/explore/filter': (context) => const FilterScreen(),
+        '/books/detail': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          return BookDetailScreen.fromRoute(args);
+        },
         '/home': (context) => const HomeScreen(),
       },
     );
