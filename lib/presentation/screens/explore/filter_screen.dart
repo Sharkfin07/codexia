@@ -415,6 +415,10 @@ class _FiltersCard extends StatelessWidget {
                         onPressed: onApply,
                         icon: const Icon(Icons.tune_outlined),
                         label: const Text('Apply Filters'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppPalette.darkPrimary,
+                          foregroundColor: AppPalette.darkPink,
+                        ),
                       ),
                     ),
                   ],

@@ -71,8 +71,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   TextFormField(
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
+                    style: TextStyle(color: scheme.onSurface),
                     decoration: InputDecoration(
                       labelText: 'Email',
+                      labelStyle: TextStyle(color: scheme.onSurface),
+                      hintStyle: TextStyle(
+                        color: scheme.onSurface.withValues(alpha: 0.7),
+                      ),
                       filled: true,
                       fillColor: inputFill,
                       enabledBorder: border,
@@ -98,8 +103,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   TextFormField(
                     controller: _passwordCtrl,
                     obscureText: _obscure,
+                    style: TextStyle(color: scheme.onSurface),
                     decoration: InputDecoration(
                       labelText: 'Password',
+                      labelStyle: TextStyle(color: scheme.onSurface),
+                      hintStyle: TextStyle(
+                        color: scheme.onSurface.withValues(alpha: 0.7),
+                      ),
                       filled: true,
                       fillColor: inputFill,
                       enabledBorder: border,
@@ -139,7 +149,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                     child: GlobalButton(
                       variant: ButtonVariant.text,
                       fullWidth: false,
-                      child: const Text("Forgot Password?"),
+                      child: Text(
+                        "Forgot Password?",
+                        style: const TextStyle(color: Color(0xFFDB2777)),
+                      ),
                       onPressed: () =>
                           Navigator.pushNamed(context, '/forgot-password'),
                     ),
@@ -173,7 +186,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                     isLoading: isLoading,
                     onPressed: () =>
                         Navigator.pushReplacementNamed(context, '/sign-up'),
-                    child: const Text("Don't have an account? Sign Up"),
+                    child: Text(
+                      "Don't have an account? Sign Up",
+                      style: const TextStyle(color: Color(0xFFDB2777)),
+                    ),
                   ),
                 ],
               ),

@@ -81,8 +81,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   TextFormField(
                     controller: _nameCtrl,
                     textCapitalization: TextCapitalization.words,
+                    style: TextStyle(color: scheme.onSurface),
                     decoration: InputDecoration(
                       labelText: 'Name',
+                      labelStyle: TextStyle(color: scheme.onSurface),
+                      hintStyle: TextStyle(
+                        color: scheme.onSurface.withValues(alpha: 0.7),
+                      ),
                       filled: true,
                       fillColor: inputFill,
                       enabledBorder: border,
@@ -105,8 +110,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   TextFormField(
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
+                    style: TextStyle(color: scheme.onSurface),
                     decoration: InputDecoration(
                       labelText: 'Email',
+                      labelStyle: TextStyle(color: scheme.onSurface),
+                      hintStyle: TextStyle(
+                        color: scheme.onSurface.withValues(alpha: 0.7),
+                      ),
                       filled: true,
                       fillColor: inputFill,
                       enabledBorder: border,
@@ -132,8 +142,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   TextFormField(
                     controller: _passwordCtrl,
                     obscureText: _obscure,
+                    style: TextStyle(color: scheme.onSurface),
                     decoration: InputDecoration(
                       labelText: 'Password',
+                      labelStyle: TextStyle(color: scheme.onSurface),
+                      hintStyle: TextStyle(
+                        color: scheme.onSurface.withValues(alpha: 0.7),
+                      ),
                       helperText:
                           'Must be at least 8 chars, include letters and numbers',
                       helperStyle: TextStyle(
@@ -200,7 +215,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     isLoading: isLoading,
                     onPressed: () =>
                         Navigator.pushReplacementNamed(context, '/sign-in'),
-                    child: const Text('Already have an account? Sign In'),
+                    child: const Text(
+                      'Already have an account? Sign In',
+                      style: TextStyle(color: Color(0xFFDB2777)),
+                    ),
                   ),
                 ],
               ),

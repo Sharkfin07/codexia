@@ -17,6 +17,7 @@ class MainNavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileUrl = ref.read(authStateProvider).value?.photoURL;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     void handleNav(int index) {
       if (index == currentIndex) return;
@@ -48,7 +49,10 @@ class MainNavBar extends ConsumerWidget {
     }
 
     return Container(
-      color: AppPalette.darkSecondary,
+      color: isDark ? AppPalette.darkSecondary : null,
+      decoration: isDark
+          ? null
+          : const BoxDecoration(gradient: AppPalette.blossomGradient),
       padding: const EdgeInsets.all(8.0),
       child: GNav(
         rippleColor: Colors.grey[300]!,
@@ -58,7 +62,9 @@ class MainNavBar extends ConsumerWidget {
         iconSize: 24,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         duration: const Duration(milliseconds: 400),
-        tabBackgroundColor: AppPalette.darkPrimary,
+        tabBackgroundColor: isDark
+            ? AppPalette.darkPrimary
+            : AppPalette.darkSecondary.withValues(alpha: 0.2),
         tabActiveBorder: Border.all(color: AppPalette.lightPrimary),
         color: Colors.white,
         selectedIndex: currentIndex,

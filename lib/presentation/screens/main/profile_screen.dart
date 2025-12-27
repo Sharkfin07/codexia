@@ -106,7 +106,13 @@ class ProfileScreen extends ConsumerWidget {
                   icon: const Icon(Icons.logout),
                   label: const Text('Logout'),
                   style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    minimumSize: const Size.fromHeight(48),
                     backgroundColor: AppPalette.darkPink,
+                    foregroundColor: AppPalette.lightPink,
                   ),
                 ),
               ],
@@ -141,7 +147,9 @@ class _ActionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Card(
+      color: isDark ? AppPalette.darkSecondary : AppPalette.lightSecondary,
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         leading: Icon(icon),
