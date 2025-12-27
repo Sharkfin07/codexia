@@ -10,6 +10,7 @@ import 'package:codexia/presentation/screens/main/explore_screen.dart';
 import 'package:codexia/presentation/screens/main/home_screen.dart';
 import 'package:codexia/presentation/screens/main/profile_screen.dart';
 import 'package:codexia/presentation/screens/main/rental_screen.dart';
+import 'package:codexia/presentation/screens/order/rent_book_screen.dart';
 import 'package:codexia/presentation/theme/app_theme.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -55,6 +56,10 @@ class MainApp extends ConsumerWidget {
         '/books/detail': (context) {
           final args = ModalRoute.of(context)?.settings.arguments;
           return BookDetailScreen.fromRoute(args);
+        },
+        '/books/rent': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          return RentBookScreen.fromRoute(args);
         },
         '/home': (context) => const HomeScreen(),
       },

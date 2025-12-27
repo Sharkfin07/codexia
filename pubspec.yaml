@@ -17,6 +17,7 @@ dependencies:
   riverpod_annotation: ^3.0.3
   flutter_svg: ^2.2.3
   google_nav_bar: ^5.0.7
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:

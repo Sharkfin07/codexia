@@ -1,9 +1,11 @@
 import 'package:codexia/presentation/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../data/models/book_model.dart';
 import '../../../presentation/providers/book_detail_provider.dart';
+import '../order/rent_book_screen.dart';
 
 class BookDetailArgs {
   const BookDetailArgs({required this.id, this.prefetched});
@@ -158,7 +160,12 @@ class _DetailBody extends StatelessWidget {
             const SizedBox(height: 16),
             _PriceTag(price: book!.price),
             const SizedBox(height: 16),
-            Text('Summary', style: Theme.of(context).textTheme.titleMedium),
+            _ActionButtons(book: book!),
+            const SizedBox(height: 16),
+            Text(
+              'Summary',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Text(book!.summary, style: Theme.of(context).textTheme.bodyMedium),
           ],
@@ -210,7 +217,10 @@ class _MetaChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Chip(avatar: Icon(icon, size: 18), label: Text(label));
+    return Chip(
+      avatar: Icon(icon, size: 18, color: AppPalette.darkPink),
+      label: Text(label),
+    );
   }
 }
 
@@ -230,6 +240,56 @@ class _PriceTag extends StatelessWidget {
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             color: Colors.green.shade800,
             fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ActionButtons extends StatelessWidget {
+  const _ActionButtons({required this.book});
+
+  final BookModel book;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () async {
+              final query = Uri.encodeComponent('${book.title} buy book');
+              final url = 'https://www.google.com/search?q=$query';
+              final launched = await launchUrlString(url);
+              if (!launched && context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Could not open buy link')),
+                );
+              }
+            },
+            icon: const Icon(Icons.shopping_cart_outlined),
+            label: const Text('Buy'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppPalette.darkPink,
+              foregroundColor: AppPalette.lightPink,
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: () {
+              Navigator.of(
+                context,
+              ).pushNamed('/books/rent', arguments: RentBookArgs(book: book));
+            },
+            icon: const Icon(Icons.assignment_outlined),
+            label: const Text('Rent'),
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: AppPalette.darkPink),
+              foregroundColor: AppPalette.darkPink,
+            ),
           ),
         ),
       ],
