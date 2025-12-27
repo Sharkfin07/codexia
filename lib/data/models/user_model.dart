@@ -14,8 +14,6 @@ class UserModel {
   final String name;
   final String email;
   final String? photoUrl;
-  final String? phone;
-  final String? role;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -24,8 +22,6 @@ class UserModel {
     required this.name,
     required this.email,
     this.photoUrl,
-    this.phone,
-    this.role,
     this.createdAt,
     this.updatedAt,
   });
@@ -51,8 +47,6 @@ class UserModel {
       name: data['name'] ?? '',
       email: data['email'] ?? '',
       photoUrl: data['photoUrl'] as String?,
-      phone: data['phone'] as String?,
-      role: data['role'] as String?,
       createdAt: created,
       updatedAt: updated,
     );
@@ -64,8 +58,6 @@ class UserModel {
       'name': name,
       'email': email,
       if (photoUrl != null) 'photoUrl': photoUrl,
-      if (phone != null) 'phone': phone,
-      if (role != null) 'role': role,
       if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
       if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
     };
@@ -85,8 +77,6 @@ class UserModel {
       name: name ?? this.name,
       email: email ?? this.email,
       photoUrl: photoUrl ?? this.photoUrl,
-      phone: phone ?? this.phone,
-      role: role ?? this.role,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

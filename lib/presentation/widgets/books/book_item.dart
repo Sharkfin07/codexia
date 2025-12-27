@@ -63,7 +63,6 @@ class _Cover extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Image.network(
-        // TODO: Fix getting image from URL
         url,
         width: 64,
         height: 96,

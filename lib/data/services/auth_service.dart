@@ -51,18 +51,32 @@ class AuthService {
     await firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
-  Future<void> updateUsername({required String name}) async {
+  Future<void> updateProfile({
+    required String name,
+    required String photoUrl,
+  }) async {
     final user = currentUser;
     if (user == null) throw Exception('No authenticated user');
 
     await user.updateDisplayName(name);
 
-    // Update also in users collection (merge to avoid overwriting other fields)
-    await FirestoreService.instance.set('users/${user.uid}', {
-      'name': name,
+    final trimmedPhoto = photoUrl.trim();
+    if (trimmedPhoto.isNotEmpty) {
+      await user.updatePhotoURL(trimmedPhoto);
+    }
+
+    final fsService = FirestoreService.instance;
+
+    await fsService.set('users/${user.uid}', {'name': name}, merge: true);
+
+    await fsService.set('users/${user.uid}', {
+      'photoUrl': photoUrl,
     }, merge: true);
+
+    await user.reload();
   }
 
+  // ! Reauthenticate Needed
   Future<void> deleteAccount({
     required String email,
     required String password,
@@ -79,6 +93,7 @@ class AuthService {
     await signOut();
   }
 
+  // ! Reauthenticate Needed
   Future<void> resetPasswordFromCurrentPassword({
     required String currentPassword,
     required String newPassword,

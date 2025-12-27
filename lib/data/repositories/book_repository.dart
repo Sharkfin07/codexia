@@ -43,6 +43,23 @@ class BookRepository {
       throw BookRepositoryException(e.message);
     }
   }
+
+  Future<BookModel> fetchRandomBook() async {
+    try {
+      final data = await _service.fetchRandomBookRaw();
+      return BookModel.fromMap(data);
+    } on BookServiceException catch (e) {
+      throw BookRepositoryException(e.message);
+    }
+  }
+
+  Future<List<String>> fetchGenres() async {
+    try {
+      return await _service.fetchGenres();
+    } on BookServiceException catch (e) {
+      throw BookRepositoryException(e.message);
+    }
+  }
 }
 
 enum BookSort {

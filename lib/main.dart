@@ -2,7 +2,14 @@ import 'package:codexia/presentation/providers/auth_provider.dart';
 import 'package:codexia/presentation/screens/auth/forgot_password_screen.dart';
 import 'package:codexia/presentation/screens/auth/sign_in_screen.dart';
 import 'package:codexia/presentation/screens/auth/sign_up_screen.dart';
-import 'package:codexia/presentation/screens/explore/explore_screen.dart';
+import 'package:codexia/presentation/screens/auth/edit_profile_screen.dart';
+import 'package:codexia/presentation/screens/auth/reset_password_screen.dart';
+import 'package:codexia/presentation/screens/books/book_detail_screen.dart';
+import 'package:codexia/presentation/screens/explore/filter_screen.dart';
+import 'package:codexia/presentation/screens/main/explore_screen.dart';
+import 'package:codexia/presentation/screens/main/home_screen.dart';
+import 'package:codexia/presentation/screens/main/profile_screen.dart';
+import 'package:codexia/presentation/screens/main/rental_screen.dart';
 import 'package:codexia/presentation/theme/app_theme.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -30,7 +37,7 @@ class MainApp extends ConsumerWidget {
       themeMode: ThemeMode.system,
       home: authState.when(
         data: (user) =>
-            user != null ? const ExploreScreen() : const SignInScreen(),
+            user != null ? const HomeScreen() : const SignInScreen(),
         loading: () =>
             const Scaffold(body: Center(child: CircularProgressIndicator())),
         error: (e, _) => Scaffold(body: Center(child: Text('Auth error: $e'))),
@@ -39,6 +46,17 @@ class MainApp extends ConsumerWidget {
         '/sign-in': (context) => const SignInScreen(),
         '/sign-up': (context) => const SignUpScreen(),
         '/forgot-password': (context) => const ForgotPasswordScreen(),
+        '/profile': (context) => const ProfileScreen(),
+        '/profile/edit': (context) => const EditProfileScreen(),
+        '/profile/reset-password': (context) => const ResetPasswordScreen(),
+        '/rental': (context) => const RentalScreen(),
+        '/explore': (context) => const ExploreScreen(),
+        '/explore/filter': (context) => const FilterScreen(),
+        '/books/detail': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          return BookDetailScreen.fromRoute(args);
+        },
+        '/home': (context) => const HomeScreen(),
       },
     );
   }

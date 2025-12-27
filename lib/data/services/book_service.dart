@@ -24,6 +24,7 @@ class BookService {
           if (year != null) 'year': '$year',
           'sort': sort,
           'page': '$page',
+          'pageSize': '$pageSize',
         },
       );
 
@@ -47,6 +48,83 @@ class BookService {
         throw BookServiceException('Failed to load book ($id)');
       }
       return data;
+    } on DioException catch (e) {
+      throw BookServiceException(_dioMessage(e));
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchRandomBookRaw() async {
+    try {
+      final response = await _client.get<Map<String, dynamic>>('/random_book');
+      final data = response.data;
+      if (response.statusCode != 200 || data == null) {
+        throw BookServiceException('Failed to load random book');
+      }
+      return data;
+    } on DioException catch (e) {
+      throw BookServiceException(_dioMessage(e));
+    }
+  }
+
+  Future<List<String>> fetchGenres() async {
+    try {
+      final response = await _client.get<dynamic>('/stats/genre');
+      final data = response.data;
+
+      if (response.statusCode != 200 || data == null) {
+        throw BookServiceException('Failed to load genres');
+      }
+
+      final genres = <String>{};
+
+      String? normalizeGenre(dynamic value) {
+        if (value == null) return null;
+        final trimmed = value.toString().trim();
+        if (trimmed.isEmpty) return null;
+        final cleaned = trimmed.replaceAll(RegExp(r'[\s,]+$'), '');
+        return cleaned.isEmpty ? null : cleaned;
+      }
+
+      void addIfValid(dynamic value) {
+        final cleaned = normalizeGenre(value);
+        if (cleaned != null) genres.add(cleaned);
+      }
+
+      void parseList(List<dynamic> items) {
+        for (final item in items) {
+          if (item is Map<String, dynamic>) {
+            addIfValid(item['genre'] ?? item['name'] ?? item['category']);
+          } else {
+            addIfValid(item);
+          }
+        }
+      }
+
+      if (data is List) {
+        parseList(data);
+      } else if (data is Map<String, dynamic>) {
+        if (data['genre_statistics'] is List) {
+          parseList((data['genre_statistics'] as List).cast<dynamic>());
+        }
+
+        if (data['genreStats'] is List) {
+          parseList((data['genreStats'] as List).cast<dynamic>());
+        }
+
+        for (final entry in data.entries) {
+          final key = entry.key.toString();
+          final isNumeric = entry.value is num;
+          final looksLikeTotal = key.toLowerCase().contains('total');
+          if (isNumeric && !looksLikeTotal) addIfValid(key);
+        }
+      }
+
+      final result = genres.toList()..sort((a, b) => a.compareTo(b));
+      if (result.isEmpty) {
+        throw BookServiceException('Empty genre list');
+      }
+
+      return result;
     } on DioException catch (e) {
       throw BookServiceException(_dioMessage(e));
     }
