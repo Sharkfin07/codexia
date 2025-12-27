@@ -1,4 +1,5 @@
 import 'package:codexia/presentation/screens/explore/filter_screen.dart';
+import 'package:codexia/presentation/screens/explore/surprise_me_loading_screen.dart';
 import 'package:codexia/presentation/widgets/main/main_nav_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -56,7 +57,13 @@ class ExploreScreen extends StatelessWidget {
                     'Skip filters and jump to a random book recommendation.',
                 icon: Icons.auto_awesome_outlined,
                 accent: Colors.purpleAccent,
-                onTap: () => _showComingSoon(context),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const SurpriseMeLoadingScreen(),
+                    ),
+                  );
+                },
                 cta: 'Roll the Dice',
               ),
             ],

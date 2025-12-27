@@ -1,3 +1,4 @@
+import 'package:codexia/presentation/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -46,7 +47,15 @@ class BookDetailScreen extends ConsumerWidget {
     final fallback = initialBook;
 
     return Scaffold(
-      appBar: AppBar(title: Text(fallback?.title ?? 'Book Detail')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Icon(Icons.book_outlined, color: AppPalette.darkPink, size: 28),
+            SizedBox(width: 12),
+            Text('Book Detail'),
+          ],
+        ),
+      ),
       body: asyncDetail.when(
         data: (book) => _DetailBody(
           book: book,
@@ -90,65 +99,70 @@ class _DetailBody extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return RefreshIndicator(
-      onRefresh: onRefresh ?? () async {},
-      child: ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _Cover(url: book!.coverUrl, isLoading: isLoading),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      book!.title,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'by ${book!.authorName}',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        _MetaChip(
-                          label: book!.category,
-                          icon: Icons.category_outlined,
+    return SafeArea(
+      child: RefreshIndicator(
+        onRefresh: onRefresh ?? () async {},
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16),
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _Cover(url: book!.coverUrl, isLoading: isLoading),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        book!.title,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
                         ),
-                        _MetaChip(
-                          label: book!.publisher,
-                          icon: Icons.business_outlined,
-                        ),
-                        _MetaChip(
-                          label: _formatDate(book!.publishedDate),
-                          icon: Icons.calendar_month_outlined,
-                        ),
-                        _MetaChip(
-                          label: '${book!.totalPages} pages',
-                          icon: Icons.menu_book_outlined,
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'by ${book!.authorName}',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          _MetaChip(
+                            label: book!.category,
+                            icon: Icons.category_outlined,
+                          ),
+                          _MetaChip(
+                            label: book!.publisher,
+                            icon: Icons.business_outlined,
+                          ),
+                          _MetaChip(
+                            label: _formatDate(book!.publishedDate),
+                            icon: Icons.calendar_month_outlined,
+                          ),
+                          _MetaChip(
+                            label: '${book!.totalPages} pages',
+                            icon: Icons.menu_book_outlined,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _PriceTag(price: book!.price),
-          const SizedBox(height: 16),
-          Text('Summary', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Text(book!.summary, style: Theme.of(context).textTheme.bodyMedium),
-        ],
+              ],
+            ),
+            const SizedBox(height: 16),
+            _PriceTag(price: book!.price),
+            const SizedBox(height: 16),
+            Text('Summary', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Text(book!.summary, style: Theme.of(context).textTheme.bodyMedium),
+          ],
+        ),
       ),
     );
   }
@@ -177,7 +191,7 @@ class _Cover extends StatelessWidget {
               : Image.network(
                   url,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
+                  errorBuilder: (_, _, _) => Container(
                     color: Colors.grey.shade300,
                     child: const Icon(Icons.book_outlined, size: 48),
                   ),

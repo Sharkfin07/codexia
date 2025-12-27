@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../data/models/book_model.dart';
 import '../../../data/repositories/book_repository.dart';
-import '../books/book_detail.dart';
+import '../books/book_detail_screen.dart';
 import '../../widgets/books/book_item.dart';
 import '../../widgets/main/main_nav_bar.dart';
 
@@ -158,7 +158,7 @@ class _FilterScreenState extends State<FilterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Filter Books')),
+      appBar: AppBar(scrolledUnderElevation: 0),
       body: SafeArea(
         child: Column(
           children: [
@@ -184,7 +184,8 @@ class _FilterScreenState extends State<FilterScreen> {
                 _loadPage(refresh: true);
               },
             ),
-            const Divider(height: 1),
+            const SizedBox(height: 30),
+            const Divider(height: 1, color: AppPalette.darkPink),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () => _loadPage(refresh: true),

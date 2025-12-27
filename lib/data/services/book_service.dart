@@ -53,6 +53,19 @@ class BookService {
     }
   }
 
+  Future<Map<String, dynamic>> fetchRandomBookRaw() async {
+    try {
+      final response = await _client.get<Map<String, dynamic>>('/random_book');
+      final data = response.data;
+      if (response.statusCode != 200 || data == null) {
+        throw BookServiceException('Failed to load random book');
+      }
+      return data;
+    } on DioException catch (e) {
+      throw BookServiceException(_dioMessage(e));
+    }
+  }
+
   Future<List<String>> fetchGenres() async {
     try {
       final response = await _client.get<dynamic>('/stats/genre');
