@@ -45,3 +45,18 @@ flutter:
           weight: 800
         - asset: assets/fonts/Poppins-Light.ttf
           weight: 300
+
+flutter_native_splash:
+  # Disable Splash Screen
+  ios: false
+  web: false
+
+  color: "#FFFDFE"
+  color_dark: "#10082D"
+  image: assets/icons/null-splash.png
+  image_dark: assets/icons/null-splash.png
+  android_12:
+    image: assets/icons/null-splash.png
+    image_dark: assets/icons/null-splash.png
+    icon_background_color: "#FFFDFE"
+    icon_background_color_dark: "#10082D"
