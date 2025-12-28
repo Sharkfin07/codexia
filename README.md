@@ -1,4 +1,5 @@
 # Codexia
+<img width="1920" height="1080" alt="codexia-hero" src="https://github.com/user-attachments/assets/9bd62cf2-d9dd-4f78-acb5-f2e37641dfca" />
 Release: 1.0.0
 
 ## Overview
