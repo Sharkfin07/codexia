@@ -66,7 +66,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Icon(Icons.edit),
+            SizedBox(width: 10),
+            Text('Edit Profile'),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),

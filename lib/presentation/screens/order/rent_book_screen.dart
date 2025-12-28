@@ -1,3 +1,4 @@
+import 'package:codexia/presentation/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -37,7 +38,6 @@ class _RentBookScreenState extends ConsumerState<RentBookScreen> {
   @override
   Widget build(BuildContext context) {
     final book = widget.book;
-
     if (book is _InvalidBook) {
       return const Scaffold(body: Center(child: Text('Book data is missing.')));
     }
@@ -45,7 +45,15 @@ class _RentBookScreenState extends ConsumerState<RentBookScreen> {
     final totalPrice = _days * _pricePerDay;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Rent Book')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Icon(Icons.timelapse),
+            SizedBox(width: 10),
+            Text('Rent Book'),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -64,6 +72,9 @@ class _RentBookScreenState extends ConsumerState<RentBookScreen> {
                     ),
                     Slider(
                       value: _days.toDouble(),
+                      inactiveColor: AppPalette.darkSecondary,
+                      activeColor: AppPalette.darkPink,
+                      thumbColor: AppPalette.lightPink,
                       min: 1,
                       max: 7,
                       divisions: 6,
@@ -118,6 +129,10 @@ class _RentBookScreenState extends ConsumerState<RentBookScreen> {
                             : const Icon(Icons.playlist_add_check),
                         label: Text(
                           _isSubmitting ? 'Processing...' : 'Confirm Rent',
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppPalette.darkPink,
+                          foregroundColor: Colors.white,
                         ),
                       ),
                     ),

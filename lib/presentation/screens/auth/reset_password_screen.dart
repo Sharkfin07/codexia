@@ -71,7 +71,15 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Change Password')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Icon(Icons.lock_reset),
+            SizedBox(width: 10),
+            Text('Change Password'),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),

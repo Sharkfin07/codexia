@@ -52,7 +52,6 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Forgot Password')),
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -63,6 +62,25 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.lock, size: 60),
+                      Icon(Icons.question_mark_rounded, size: 60),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    "Forgot your password?",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Enter your email address and we’ll send a password reset link to your inbox.",
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 18),
                   TextFormField(
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
@@ -92,7 +110,14 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   GlobalButton(
                     onPressed: _submit,
                     isLoading: isLoading,
-                    child: const Text('Send Reset Link'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.lock_reset),
+                        SizedBox(width: 10),
+                        Text('Send Reset Link'),
+                      ],
+                    ),
                   ),
 
                   const SizedBox(height: 12),
