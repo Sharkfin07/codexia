@@ -28,7 +28,7 @@ class HomeScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                LogoRegular(width: 100, forceDark: true),
+                LogoRegular(width: 100, mode: LogoVariants.dark),
                 SizedBox(height: 18),
                 Text(
                   '$greeting, $firstName!',
