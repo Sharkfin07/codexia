@@ -1,7 +1,10 @@
 import 'package:codexia/presentation/providers/auth_provider.dart';
 import 'package:codexia/presentation/screens/main/explore_screen.dart';
+import 'package:codexia/presentation/theme/app_palette.dart';
 import 'package:codexia/presentation/widgets/global/global_button.dart';
+import 'package:codexia/presentation/widgets/global/logo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
@@ -67,6 +70,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  LogoTypography(width: 240)
+                      .animate(onPlay: (controller) => controller.repeat())
+                      .shimmer(
+                        duration: 1200.ms,
+                        color: AppPalette.lightSecondary,
+                      ),
+
+                  SizedBox(height: 36),
+
                   // * Email Form
                   TextFormField(
                     controller: _emailCtrl,

@@ -1,6 +1,8 @@
 import 'package:codexia/presentation/providers/auth_provider.dart';
 import 'package:codexia/presentation/screens/main/explore_screen.dart';
+import 'package:codexia/presentation/theme/app_palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../widgets/global/global_button.dart';
@@ -66,6 +68,23 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.5)),
     );
 
+    Widget title = const Text(
+          'Ready to Discover Your Next Read?',
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 40,
+            color: AppPalette.darkPink,
+            height: 1,
+            letterSpacing: -1,
+          ),
+        ),
+        animatedTitle = title
+            .animate(onPlay: (controller) => controller.repeat())
+            .shimmer(duration: 1200.ms, color: const Color(0xFF80DDFF))
+            .animate() // this wraps the previous Animate in another Animate
+            .fadeIn(duration: 1200.ms, curve: Curves.easeOutQuad)
+            .slide();
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -77,6 +96,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  animatedTitle,
+                  SizedBox(height: 20),
                   // * Name Form
                   TextFormField(
                     controller: _nameCtrl,

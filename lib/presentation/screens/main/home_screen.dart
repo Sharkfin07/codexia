@@ -3,6 +3,7 @@ import 'package:codexia/presentation/theme/app_palette.dart';
 import 'package:codexia/presentation/widgets/global/logo.dart';
 import 'package:codexia/presentation/widgets/main/main_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -18,6 +19,78 @@ class HomeScreen extends ConsumerWidget {
     final greeting = _greetingFor(now.hour);
     final firstName = _firstWord(displayName) ?? emailFirst ?? 'there';
 
+    final title =
+        [
+              LogoRegular(width: 100, mode: LogoVariants.dark),
+              SizedBox(height: 18),
+              Text(
+                '$greeting, $firstName!',
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 6),
+              Opacity(
+                opacity: 0.5,
+                child: const Text(
+                  'Welcome back to Codexia!\nPick a path to start exploring.',
+                ),
+              ),
+            ]
+            .animate(interval: 100.ms)
+            .fadeIn(duration: 700.ms, delay: 200.ms)
+            .shimmer(blendMode: BlendMode.srcOver, color: Colors.white12)
+            .move(begin: const Offset(0, -16), curve: Curves.easeOutQuad);
+
+    final actions =
+        [
+              Expanded(
+                child: _ActionCard(
+                  title: 'Quick Explore',
+                  subtitle: 'Filter books fast!',
+                  icon: Icons.explore_outlined,
+                  gradient: const [
+                    AppPalette.darkPink,
+                    AppPalette.darkSecondary,
+                  ],
+                  onTap: () =>
+                      Navigator.of(context).pushNamed('/explore/filter'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _ActionCard(
+                  title: 'My Rentals',
+                  subtitle: 'Manage your rentals',
+                  icon: Icons.event_note_outlined,
+                  gradient: const [
+                    AppPalette.darkSecondary,
+                    AppPalette.darkPink,
+                  ],
+                  onTap: () => Navigator.of(context).pushNamed('/rental'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _ActionCard(
+                  title: 'My Wishlist',
+                  subtitle: 'Saved favorites',
+                  icon: Icons.favorite_outline,
+                  gradient: const [
+                    AppPalette.darkPink,
+                    AppPalette.darkSecondary,
+                  ],
+                  onTap: () => Navigator.of(context).pushNamed('/wishlist'),
+                ),
+              ),
+            ]
+            .animate(delay: 520.ms, interval: 100.ms)
+            .fadeIn(duration: 900.ms, delay: 300.ms)
+            .shimmer(blendMode: BlendMode.srcOver, color: Colors.white12)
+            .move(begin: const Offset(-16, 0), curve: Curves.easeOutQuad);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -28,68 +101,9 @@ class HomeScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                LogoRegular(width: 100, mode: LogoVariants.dark),
-                SizedBox(height: 18),
-                Text(
-                  '$greeting, $firstName!',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                const SizedBox(height: 6),
-                Opacity(
-                  opacity: 0.5,
-                  child: const Text(
-                    'Welcome back to Codexia!\nPick a path to start exploring.',
-                  ),
-                ),
+                ...title,
                 const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _ActionCard(
-                        title: 'Quick Explore',
-                        subtitle: 'Filter books fast!',
-                        icon: Icons.explore_outlined,
-                        gradient: const [
-                          AppPalette.darkPink,
-                          AppPalette.darkSecondary,
-                        ],
-                        onTap: () =>
-                            Navigator.of(context).pushNamed('/explore/filter'),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _ActionCard(
-                        title: 'My Rentals',
-                        subtitle: 'Manage your rentals',
-                        icon: Icons.event_note_outlined,
-                        gradient: const [
-                          AppPalette.darkSecondary,
-                          AppPalette.darkPink,
-                        ],
-                        onTap: () => Navigator.of(context).pushNamed('/rental'),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _ActionCard(
-                        title: 'My Wishlist',
-                        subtitle: 'Saved favorites',
-                        icon: Icons.favorite_outline,
-                        gradient: const [
-                          AppPalette.darkPink,
-                          AppPalette.darkSecondary,
-                        ],
-                        onTap: () =>
-                            Navigator.of(context).pushNamed('/wishlist'),
-                      ),
-                    ),
-                  ],
-                ),
+                Row(children: [...actions]),
               ],
             ),
           ),
