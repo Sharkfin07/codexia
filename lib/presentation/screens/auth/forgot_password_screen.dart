@@ -110,6 +110,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   GlobalButton(
                     onPressed: _submit,
                     isLoading: isLoading,
+                    variant: ButtonVariant.gradient,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -126,7 +127,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     variant: ButtonVariant.text,
                     fullWidth: false,
                     onPressed: isLoading ? null : () => Navigator.pop(context),
-                    child: const Text('Back'),
+                    child: const Text(
+                      'Back',
+                      style: TextStyle(color: Color(0xFFDB2777)),
+                    ),
                   ),
                 ],
               ),
