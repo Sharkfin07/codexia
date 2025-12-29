@@ -1,0 +1,4 @@
+# Base Directories
+.dart_tool/
+.idea/
+build/
