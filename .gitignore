@@ -2,3 +2,12 @@
 .dart_tool/
 .idea/
 build/
+*.flutter-plugins-dependencies
+firebase_options.dart
+
+# Other Platforms
+android/
+linux/
+macos/
+windows/
+ios/
