@@ -20,6 +20,7 @@ dependencies:
   url_launcher: ^6.3.0
   flutter_animate: ^4.5.2
   flutter_native_splash: ^2.4.7
+  rive: ^0.14.0
 
 dev_dependencies:
   flutter_test:
