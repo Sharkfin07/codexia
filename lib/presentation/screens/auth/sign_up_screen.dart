@@ -87,182 +87,194 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  animatedTitle,
-                  SizedBox(height: 20),
-                  // * Name Form
-                  TextFormField(
-                    controller: _nameCtrl,
-                    textCapitalization: TextCapitalization.words,
-                    style: TextStyle(color: scheme.onSurface),
-                    decoration: InputDecoration(
-                      labelText: 'Name',
-                      labelStyle: TextStyle(color: scheme.onSurface),
-                      hintStyle: TextStyle(
-                        color: scheme.onSurface.withValues(alpha: 0.7),
-                      ),
-                      filled: true,
-                      fillColor: inputFill,
-                      enabledBorder: border,
-                      focusedBorder: border.copyWith(
-                        borderSide: BorderSide(
-                          color: scheme.primary,
-                          width: 1.5,
-                        ),
-                      ),
-                    ),
-                    validator: (v) {
-                      if (v == null || v.trim().isEmpty) return 'Name required';
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // * Email Form
-                  TextFormField(
-                    controller: _emailCtrl,
-                    keyboardType: TextInputType.emailAddress,
-                    style: TextStyle(color: scheme.onSurface),
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: TextStyle(color: scheme.onSurface),
-                      hintStyle: TextStyle(
-                        color: scheme.onSurface.withValues(alpha: 0.7),
-                      ),
-                      filled: true,
-                      fillColor: inputFill,
-                      enabledBorder: border,
-                      focusedBorder: border.copyWith(
-                        borderSide: BorderSide(
-                          color: scheme.primary,
-                          width: 1.5,
-                        ),
-                      ),
-                    ),
-                    validator: (v) {
-                      if (v == null || v.trim().isEmpty) {
-                        return 'Email required';
-                      }
-                      if (!v.contains('@')) return 'Invalid email';
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // * Password Form
-                  TextFormField(
-                    controller: _passwordCtrl,
-                    obscureText: _obscure,
-                    style: TextStyle(color: scheme.onSurface),
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      labelStyle: TextStyle(color: scheme.onSurface),
-                      hintStyle: TextStyle(
-                        color: scheme.onSurface.withValues(alpha: 0.7),
-                      ),
-                      helperText:
-                          'Must be at least 8 chars, include letters and numbers',
-                      helperStyle: TextStyle(
-                        color: scheme.onSurface.withValues(alpha: 0.3),
-                      ),
-                      filled: true,
-                      fillColor: inputFill,
-                      enabledBorder: border,
-                      focusedBorder: border.copyWith(
-                        borderSide: BorderSide(
-                          color: scheme.primary,
-                          width: 1.5,
-                        ),
-                      ),
-                      suffixIconConstraints: const BoxConstraints(
-                        minHeight: 36,
-                        minWidth: 36,
-                      ),
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: IconButton(
-                          visualDensity: VisualDensity.compact,
-                          icon: Icon(
-                            _obscure ? Icons.visibility : Icons.visibility_off,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      animatedTitle,
+                      SizedBox(height: 20),
+                      // * Name Form
+                      TextFormField(
+                        controller: _nameCtrl,
+                        textCapitalization: TextCapitalization.words,
+                        style: TextStyle(color: scheme.onSurface),
+                        decoration: InputDecoration(
+                          labelText: 'Name',
+                          labelStyle: TextStyle(color: scheme.onSurface),
+                          hintStyle: TextStyle(
+                            color: scheme.onSurface.withValues(alpha: 0.7),
                           ),
-                          onPressed: () => setState(() => _obscure = !_obscure),
-                        ),
-                      ),
-                    ),
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return 'Password required';
-                      if (!_isStrongPassword(v)) {
-                        return 'Min 8 chars with letters & numbers';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // * Submit Button with AnimatedContainer (more dramatic)
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOutExpo,
-                    width: double.infinity,
-                    height: isLoading ? 46 : 56,
-                    transformAlignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(isLoading ? 30 : 14),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.pink.withValues(alpha: 0.35),
-                          blurRadius: isLoading ? 4 : 18,
-                          spreadRadius: isLoading ? 0 : 2,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: GlobalButton(
-                      onPressed: _submit,
-                      isLoading: isLoading,
-                      variant: ButtonVariant.gradient,
-                      child: const Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
+                          filled: true,
+                          fillColor: inputFill,
+                          enabledBorder: border,
+                          focusedBorder: border.copyWith(
+                            borderSide: BorderSide(
+                              color: scheme.primary,
+                              width: 1.5,
+                            ),
                           ),
                         ),
+                        validator: (v) {
+                          if (v == null || v.trim().isEmpty)
+                            return 'Name required';
+                          return null;
+                        },
                       ),
-                    ),
-                  ),
 
-                  const SizedBox(height: 12),
+                      const SizedBox(height: 12),
 
-                  // * Sign In Button
-                  GlobalButton(
-                    variant: ButtonVariant.text,
-                    fullWidth: false,
-                    isLoading: isLoading,
-                    onPressed: () =>
-                        Navigator.pushReplacementNamed(context, '/sign-in'),
-                    child: const Text(
-                      'Already have an account? Sign In',
-                      style: TextStyle(color: Color(0xFFDB2777)),
-                    ),
+                      // * Email Form
+                      TextFormField(
+                        controller: _emailCtrl,
+                        keyboardType: TextInputType.emailAddress,
+                        style: TextStyle(color: scheme.onSurface),
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          labelStyle: TextStyle(color: scheme.onSurface),
+                          hintStyle: TextStyle(
+                            color: scheme.onSurface.withValues(alpha: 0.7),
+                          ),
+                          filled: true,
+                          fillColor: inputFill,
+                          enabledBorder: border,
+                          focusedBorder: border.copyWith(
+                            borderSide: BorderSide(
+                              color: scheme.primary,
+                              width: 1.5,
+                            ),
+                          ),
+                        ),
+                        validator: (v) {
+                          if (v == null || v.trim().isEmpty) {
+                            return 'Email required';
+                          }
+                          if (!v.contains('@')) return 'Invalid email';
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // * Password Form
+                      TextFormField(
+                        controller: _passwordCtrl,
+                        obscureText: _obscure,
+                        style: TextStyle(color: scheme.onSurface),
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          labelStyle: TextStyle(color: scheme.onSurface),
+                          hintStyle: TextStyle(
+                            color: scheme.onSurface.withValues(alpha: 0.7),
+                          ),
+                          helperText:
+                              'Must be at least 8 chars, include letters and numbers',
+                          helperStyle: TextStyle(
+                            color: scheme.onSurface.withValues(alpha: 0.3),
+                          ),
+                          filled: true,
+                          fillColor: inputFill,
+                          enabledBorder: border,
+                          focusedBorder: border.copyWith(
+                            borderSide: BorderSide(
+                              color: scheme.primary,
+                              width: 1.5,
+                            ),
+                          ),
+                          suffixIconConstraints: const BoxConstraints(
+                            minHeight: 36,
+                            minWidth: 36,
+                          ),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: IconButton(
+                              visualDensity: VisualDensity.compact,
+                              icon: Icon(
+                                _obscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () =>
+                                  setState(() => _obscure = !_obscure),
+                            ),
+                          ),
+                        ),
+                        validator: (v) {
+                          if (v == null || v.isEmpty)
+                            return 'Password required';
+                          if (!_isStrongPassword(v)) {
+                            return 'Min 8 chars with letters & numbers';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // * Submit Button with AnimatedContainer (more dramatic)
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOutExpo,
+                        width: double.infinity,
+                        height: isLoading ? 46 : 56,
+                        transformAlignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            isLoading ? 30 : 14,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.pink.withValues(alpha: 0.35),
+                              blurRadius: isLoading ? 4 : 18,
+                              spreadRadius: isLoading ? 0 : 2,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: GlobalButton(
+                          onPressed: _submit,
+                          isLoading: isLoading,
+                          variant: ButtonVariant.gradient,
+                          child: const Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // * Sign In Button
+                      GlobalButton(
+                        variant: ButtonVariant.text,
+                        fullWidth: false,
+                        isLoading: isLoading,
+                        onPressed: () =>
+                            Navigator.pushReplacementNamed(context, '/sign-in'),
+                        child: const Text(
+                          'Already have an account? Sign In',
+                          style: TextStyle(color: Color(0xFFDB2777)),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );
