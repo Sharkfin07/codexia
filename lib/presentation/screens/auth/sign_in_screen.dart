@@ -1,10 +1,8 @@
 import 'package:codexia/presentation/providers/auth_provider.dart';
 import 'package:codexia/presentation/screens/main/explore_screen.dart';
-import 'package:codexia/presentation/theme/app_palette.dart';
+import 'package:codexia/presentation/widgets/auth/login_animation.dart';
 import 'package:codexia/presentation/widgets/global/global_button.dart';
-import 'package:codexia/presentation/widgets/global/logo.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
@@ -15,15 +13,37 @@ class SignInScreen extends ConsumerStatefulWidget {
 }
 
 class _SignInScreenState extends ConsumerState<SignInScreen> {
+  double _opacityLevel = 0.0;
   final _formKey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
+  final _emailFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+  LoginAnimationController? _anim;
   bool _obscure = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailFocus.addListener(_handleEmailFocus);
+    _passwordFocus.addListener(_handlePasswordFocus);
+
+    // Fade-in effect
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _opacityLevel = 1.0;
+      });
+    });
+  }
 
   @override
   void dispose() {
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
+    _emailFocus.removeListener(_handleEmailFocus);
+    _passwordFocus.removeListener(_handlePasswordFocus);
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
     super.dispose();
   }
 
@@ -37,14 +57,32 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         email: _emailCtrl.text.trim(),
         password: _passwordCtrl.text.trim(),
       );
+      _anim?.success();
       if (mounted) {
         navigator.pushReplacement(
           MaterialPageRoute(builder: (_) => const ExploreScreen()),
         );
       }
     } catch (e) {
+      _anim?.fail();
       if (!mounted) return;
       messenger.showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
+
+  void _handleEmailFocus() {
+    if (_emailFocus.hasFocus) {
+      _anim?.setChecking(true);
+      _anim?.setHandsUp(false);
+    }
+  }
+
+  void _handlePasswordFocus() {
+    if (_passwordFocus.hasFocus) {
+      _anim?.setHandsUp(true);
+      _anim?.setChecking(false);
+    } else {
+      _anim?.setHandsUp(false);
     }
   }
 
@@ -70,18 +108,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  LogoTypography(width: 240)
-                      .animate(onPlay: (controller) => controller.repeat())
-                      .shimmer(
-                        duration: 1200.ms,
-                        color: AppPalette.lightSecondary,
-                      ),
+                  // * Example case of Rive Animations
+                  LoginAnimation(onControllerReady: (ctrl) => _anim = ctrl),
 
                   SizedBox(height: 36),
 
                   // * Email Form
                   TextFormField(
                     controller: _emailCtrl,
+                    focusNode: _emailFocus,
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(color: scheme.onSurface),
                     decoration: InputDecoration(
@@ -107,6 +142,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       if (!v.contains('@')) return 'Invalid email';
                       return null;
                     },
+                    onChanged: (v) {
+                      _anim?.setChecking(true);
+                      _anim?.lookAt(v.length.toDouble());
+                    },
                   ),
 
                   const SizedBox(height: 12),
@@ -114,6 +153,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   // * Password Form
                   TextFormField(
                     controller: _passwordCtrl,
+                    focusNode: _passwordFocus,
                     obscureText: _obscure,
                     style: TextStyle(color: scheme.onSurface),
                     decoration: InputDecoration(
@@ -156,17 +196,23 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   const SizedBox(height: 5),
 
                   // * Forgot Password Button
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: GlobalButton(
-                      variant: ButtonVariant.text,
-                      fullWidth: false,
-                      child: Text(
-                        "Forgot Password?",
-                        style: const TextStyle(color: Color(0xFFDB2777)),
+                  // * Animated Opacity Example
+                  AnimatedOpacity(
+                    opacity: _opacityLevel,
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.easeIn,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: GlobalButton(
+                        variant: ButtonVariant.text,
+                        fullWidth: false,
+                        child: Text(
+                          "Forgot Password?",
+                          style: const TextStyle(color: Color(0xFFDB2777)),
+                        ),
+                        onPressed: () =>
+                            Navigator.pushNamed(context, '/forgot-password'),
                       ),
-                      onPressed: () =>
-                          Navigator.pushNamed(context, '/forgot-password'),
                     ),
                   ),
 
@@ -192,15 +238,21 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   const SizedBox(height: 12),
 
                   // * Sign Up Button
-                  GlobalButton(
-                    variant: ButtonVariant.text,
-                    fullWidth: false,
-                    isLoading: isLoading,
-                    onPressed: () =>
-                        Navigator.pushReplacementNamed(context, '/sign-up'),
-                    child: Text(
-                      "Don't have an account? Sign Up",
-                      style: const TextStyle(color: Color(0xFFDB2777)),
+                  // * Animated Opacity Example
+                  AnimatedOpacity(
+                    opacity: _opacityLevel,
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.easeIn,
+                    child: GlobalButton(
+                      variant: ButtonVariant.text,
+                      fullWidth: false,
+                      isLoading: isLoading,
+                      onPressed: () =>
+                          Navigator.pushReplacementNamed(context, '/sign-up'),
+                      child: Text(
+                        "Don't have an account? Sign Up",
+                        style: const TextStyle(color: Color(0xFFDB2777)),
+                      ),
                     ),
                   ),
                 ],
