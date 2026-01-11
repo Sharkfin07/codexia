@@ -1,3 +1,4 @@
+import 'package:codexia/presentation/widgets/global/global_spinner.dart';
 import 'package:flutter/material.dart';
 
 import '../../theme/app_palette.dart';
@@ -22,11 +23,7 @@ class GlobalButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final btnChild = isLoading
-        ? const SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          )
+        ? const SizedBox(width: 20, height: 20, child: GlobalSpinner())
         : child;
 
     final ButtonStyle style;

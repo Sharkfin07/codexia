@@ -109,6 +109,8 @@ class _DotsState extends State<_Dots> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    // * Animation Controller Example
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 900),
