@@ -12,7 +12,8 @@ class SignInScreen extends ConsumerStatefulWidget {
   ConsumerState<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends ConsumerState<SignInScreen> {
+class _SignInScreenState extends ConsumerState<SignInScreen>
+    with SingleTickerProviderStateMixin {
   double _opacityLevel = 0.0;
   final _formKey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
@@ -21,6 +22,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   final _passwordFocus = FocusNode();
   LoginAnimationController? _anim;
   bool _obscure = true;
+  late final AnimationController _welcomeCtrl;
+  late final Animation<double> _welcomeFade;
+  late final Animation<double> _welcomeScale;
 
   @override
   void initState() {
@@ -28,11 +32,25 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     _emailFocus.addListener(_handleEmailFocus);
     _passwordFocus.addListener(_handlePasswordFocus);
 
+    // * Example case of the Animation Controller
+    _welcomeCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+
+    // * Example case of the Curved Animation
+    _welcomeFade = CurvedAnimation(parent: _welcomeCtrl, curve: Curves.easeIn);
+    _welcomeScale = CurvedAnimation(
+      parent: _welcomeCtrl,
+      curve: Curves.easeOutBack,
+    );
+
     // Fade-in effect
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _opacityLevel = 1.0;
       });
+      _welcomeCtrl.forward();
     });
   }
 
@@ -44,6 +62,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     _passwordFocus.removeListener(_handlePasswordFocus);
     _emailFocus.dispose();
     _passwordFocus.dispose();
+    _welcomeCtrl.dispose();
     super.dispose();
   }
 
@@ -108,6 +127,23 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // * Example case of the Animation Controller
+                  FadeTransition(
+                    opacity: _welcomeFade,
+                    child: ScaleTransition(
+                      scale: _welcomeScale,
+                      child: const Text(
+                        "Welcome to Codexia!",
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: 20),
+
                   // * Example case of Rive Animations
                   LoginAnimation(onControllerReady: (ctrl) => _anim = ctrl),
 
@@ -218,18 +254,36 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
                   const SizedBox(height: 20),
 
-                  // * Submit Button
-                  GlobalButton(
-                    onPressed: _submit,
-                    isLoading: isLoading,
-                    variant: ButtonVariant.gradient,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Text(
-                        'Sign In',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                  // * Submit Button with AnimatedContainer
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutExpo,
+                    width: double.infinity,
+                    height: isLoading ? 46 : 56,
+                    transformAlignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(isLoading ? 30 : 14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.pink.withValues(alpha: 0.35),
+                          blurRadius: isLoading ? 4 : 18,
+                          spreadRadius: isLoading ? 0 : 2,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: GlobalButton(
+                      onPressed: _submit,
+                      isLoading: isLoading,
+                      variant: ButtonVariant.gradient,
+                      child: const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),

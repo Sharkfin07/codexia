@@ -210,18 +210,36 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
                   const SizedBox(height: 20),
 
-                  // * Submit Button
-                  GlobalButton(
-                    onPressed: _submit,
-                    isLoading: isLoading,
-                    variant: ButtonVariant.gradient,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                  // * Submit Button with AnimatedContainer (more dramatic)
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutExpo,
+                    width: double.infinity,
+                    height: isLoading ? 46 : 56,
+                    transformAlignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(isLoading ? 30 : 14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.pink.withValues(alpha: 0.35),
+                          blurRadius: isLoading ? 4 : 18,
+                          spreadRadius: isLoading ? 0 : 2,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: GlobalButton(
+                      onPressed: _submit,
+                      isLoading: isLoading,
+                      variant: ButtonVariant.gradient,
+                      child: const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
