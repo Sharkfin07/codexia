@@ -30,6 +30,9 @@ jobs:
   firebase_app_distribution:
     needs: build_and_test
     runs-on: ubuntu-latest
+    env:
+      FIREBASE_APP_ID_ANDROID: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,9 +51,9 @@ jobs:
       # Terintegrasi langsung dengan FAD
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
-        if: ${{ secrets.FIREBASE_APP_ID_ANDROID != '' && secrets.FIREBASE_TOKEN != '' }}
+        if: ${{ env.FIREBASE_APP_ID_ANDROID != '' && env.FIREBASE_TOKEN != '' }}
         with:
-          appId: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
-          token: ${{ secrets.FIREBASE_TOKEN }}
+          appId: ${{ env.FIREBASE_APP_ID_ANDROID }}
+          token: ${{ env.FIREBASE_TOKEN }}
           file: build/app/outputs/apk/debug/app-debug.apk
           releaseNotes: "Hello from GitHub Actions! :)"
