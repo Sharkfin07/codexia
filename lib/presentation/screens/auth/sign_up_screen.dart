@@ -123,8 +123,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           ),
                         ),
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty)
+                          if (v == null || v.trim().isEmpty) {
                             return 'Name required';
+                          }
                           return null;
                         },
                       ),
@@ -207,8 +208,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           ),
                         ),
                         validator: (v) {
-                          if (v == null || v.isEmpty)
+                          if (v == null || v.isEmpty) {
                             return 'Password required';
+                          }
                           if (!_isStrongPassword(v)) {
                             return 'Min 8 chars with letters & numbers';
                           }

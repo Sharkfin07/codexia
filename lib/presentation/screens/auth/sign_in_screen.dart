@@ -229,8 +229,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen>
                           ),
                         ),
                         validator: (v) {
-                          if (v == null || v.isEmpty)
+                          if (v == null || v.isEmpty) {
                             return 'Password required';
+                          }
                           if (v.length < 8) return 'Min 8 characters';
                           return null;
                         },
