@@ -30,6 +30,8 @@ dev_dependencies:
   riverpod_generator: ^3.0.3
   build_runner: ^2.10.4
   flutter_launcher_icons: ^0.14.4
+  integration_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true
